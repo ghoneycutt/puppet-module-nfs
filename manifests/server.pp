@@ -2,21 +2,46 @@
 #
 # Manages an NFS Server
 #
-class nfs::server {
+class nfs::server(
+  $exports_data  = {},
+  $exports_path  = '/etc/exports',
+  $exports_owner = 'root',
+  $exports_group = 'root',
+  $exports_mode  = '0644',
+  $exports_d     = '/etc/exports.d',
+) {
 
   include nfs::data
 
   require 'nfs'
 
-  file { 'nfs_exports':
+  create_resources( nfs::server::export, $exports_data )
+
+  file { 'exports_d':
+    path   => $exports_d,
+    ensure => directory,
+  }
+
+  file { 'exports_d/header' :
+    path    => "${exports_d}/00-header",
+    ensure  => present,
+    content => "#\n# This file is managed by pupped\n#\n",
+    require => File[ 'exports_d' ],
+  }
+
+  exec { 'create_exports':
+    command     => "cat ${exports_d}/* > ${exports_path}",
+    path        => '/bin:/usr/bin',
+    before      => File[ 'exports_file' ],
+    refreshonly => true,
+  }
+
+  file { 'exports_file':
+    path   => $exports_path,
     ensure => file,
-    source => [ "puppet:///modules/nfs/exports.${::fqdn}",
-                $nfs::data::exports_source,
-              ],
-    path   => $nfs::data::exports_path,
-    owner  => $nfs::data::exports_owner,
-    group  => $nfs::data::exports_group,
-    mode   => $nfs::data::exports_mode,
+    owner  => $exports_owner,
+    group  => $exports_group,
+    mode   => $exports_mode,
     notify => Exec['update_nfs_exports'],
   }
 
@@ -32,6 +57,8 @@ class nfs::server {
     enable     => true,
     hasstatus  => true,
     hasrestart => true,
-    require    => File['nfs_exports'],
+    require    => File['exports_file'],
   }
 }
+
+

@@ -6,8 +6,8 @@ class nfs {
 
   include nfs::data
 
-  include network
-  include nfs::idmap
+#  include network
+#  include nfs::idmap
 
   package { 'nfs_package':
     ensure => installed,

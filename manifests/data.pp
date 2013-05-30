@@ -38,14 +38,4 @@ class nfs::data {
   $idmapd_service_hasrestart = hiera('nfs_idmapd_service_hasrestart','true')
 
   $idmap_domain = hiera('nfs_idmap_domain','UNSET')
-
-  # nfs::server
-  ##############
-
-  # by default uses exports.${::fqdn} and if that is not found, falls back to hiera.
-  $exports_source = hiera('nfs::exports_source','puppet:///modules/nfs/exports')
-  $exports_path   = hiera('nfs::exports_path','/etc/exports')
-  $exports_owner  = hiera('nfs::exports_owner','root')
-  $exports_group  = hiera('nfs::exports_group','root')
-  $exports_mode   = hiera('nfs::exports_mode','0644')
 }

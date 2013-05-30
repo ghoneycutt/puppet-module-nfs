@@ -1,0 +1,4 @@
+<% cls = @export_path.to_s -%>
+<% @clients.each do |cl| cls += " " + cl + "(" + @options + ")" -%>
+<% end -%>
+<%= cls %>
