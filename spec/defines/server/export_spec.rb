@@ -15,10 +15,10 @@ describe 'nfs::server::export' do
     end
 
     it {
-      should contain_file('/tmp/exports.d/data').with({
+      should contain_file('/etc/exports.d/data').with({
         'ensure' => 'present',
       })
-      should contain_file('/tmp/exports.d/data').with_content(
+      should contain_file('/etc/exports.d/data').with_content(
 %{/srv/data 10.2.3.4(ro)
 })
     }
@@ -37,10 +37,10 @@ describe 'nfs::server::export' do
     end
 
     it {
-      should contain_file('/tmp/exports.d/data').with({
+      should contain_file('/etc/exports.d/data').with({
         'ensure' => 'present',
       })
-      should contain_file('/tmp/exports.d/data').with_content(
+      should contain_file('/etc/exports.d/data').with_content(
 %{/srv/data 10.2.3.4(ro) 2.3.4.5(ro) kalle(ro)
 })
     }

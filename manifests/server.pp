@@ -3,7 +3,7 @@
 # Manages an NFS Server
 #
 class nfs::server(
-  $exports_data  = {},
+  $exports_data  = undef,
   $exports_path  = '/etc/exports',
   $exports_owner = 'root',
   $exports_group = 'root',
@@ -11,21 +11,23 @@ class nfs::server(
   $exports_d     = '/etc/exports.d',
 ) {
 
-  include nfs::data
-
   require 'nfs'
+
+  if "${::osfamily}_${::lsbmajdistrelease}" !~ /^RedHat_[56]$/ {
+    fail( "Unsupported platform: ${::osfamily} ${::lsbrelease}. Supported OSes are RedHat 5 and 6" )
+  }
 
   create_resources( nfs::server::export, $exports_data )
 
   file { 'exports_d':
-    path   => $exports_d,
     ensure => directory,
+    path   => $exports_d,
   }
 
-  file { 'exports_d/header' :
-    path    => "${exports_d}/00-header",
+  file { 'exports_d/header':
     ensure  => present,
-    content => "#\n# This file is managed by pupped\n#\n",
+    path    => "${exports_d}/00-header",
+    content => "# This file is being maintained by Puppet\n# DO NOT EDIT\n",
     require => File[ 'exports_d' ],
   }
 
@@ -37,12 +39,12 @@ class nfs::server(
   }
 
   file { 'exports_file':
-    path   => $exports_path,
     ensure => file,
+    path   => $exports_path,
     owner  => $exports_owner,
     group  => $exports_group,
     mode   => $exports_mode,
-    notify => Exec['update_nfs_exports'],
+    notify => Exec[ 'update_nfs_exports' ],
   }
 
   exec { 'update_nfs_exports':
@@ -57,7 +59,7 @@ class nfs::server(
     enable     => true,
     hasstatus  => true,
     hasrestart => true,
-    require    => File['exports_file'],
+    require    => File[ 'exports_file' ],
   }
 }
 

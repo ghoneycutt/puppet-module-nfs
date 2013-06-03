@@ -1,8 +1,15 @@
+# == Define nfs::server::export ==
 #
-# == define nfs::server::export
+# This def creates fragments to be joined into exports file.
+# Do not call this def. directly.
 #
-#   Stub doc. to let me past puppet-lint
-# example:
+# === Parameters: ===
+# export_path:  Path to directory being exported
+# clients:      Array of client specifications as defined in exports(5)
+# options:      String of options used for each client in clients list.
+#               See exports(5).
+#
+# === Example: ===
 # /srv/data 10.2.3.4(rw)
 #
 # nfs::server::export { 'data':
@@ -21,7 +28,7 @@ define nfs::server::export (
 
   file { "${nfs::server::exports_d}/${name}" :
     ensure  => present,
-    content => template('nfs/export.erb'),
+    content => template( 'nfs/export.erb' ),
     require => File[ 'exports_d' ],
     notify  => Exec[ 'create_exports' ],
   }

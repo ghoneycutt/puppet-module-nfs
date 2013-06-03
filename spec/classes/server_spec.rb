@@ -1,24 +1,23 @@
 require 'spec_helper'
 
 describe 'nfs::server' do
-  context 'with default params' do
+  context 'with default params on supported platform' do
     let( :facts) { {  'osfamily'          => 'RedHat',
                       'lsbmajdistrelease' => '6',
     } }
 
     it {
       should contain_file('exports_d').with({
-        'path'   => '/tmp/exports.d',
+        'path'   => '/etc/exports.d',
         'ensure' => 'directory',
       })
       should contain_file('exports_d/header').with({
-        'path' => '/tmp/exports.d/00-header',
-        'content' => "#\n# This file is managed by pupped\n#\n",
+        'path' => '/etc/exports.d/00-header',
+        'content' => "# This file is being maintained by Puppet\n# DO NOT EDIT\n",
       })
     }
   end
-
-  context 'with custom exports data' do
+  context 'with custom exports data on supported platform' do
     let( :facts) { {  'osfamily'          => 'RedHat',
                       'lsbmajdistrelease' => '6',
     } }
