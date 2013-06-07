@@ -2,19 +2,41 @@
 #
 # Manages NFS
 #
-class nfs {
+class nfs(
+  $package     = undef,
+  $use_network = true,
+  $use_idmap   = true,
+) {
 
-  include nfs::data
+  if $use_network {
+    include network
+  }
+  if $use_idmap {
+    include nfs::idmap
+  }
 
-  include network
-  include nfs::idmap
+  if $package {
+    $use_package = $package
+  } else {
+    case "${::osfamily}_${::lsbmajdistrelease}" {
+      'RedHat_5': {
+        $use_package = 'nfs-utils'
+      }
+      'RedHat_6': {
+        $use_package = [ 'nfs-utils', 'rpcbind' ]
+      }
+      default: {
+        fail( 'No NFS package name supplied, and this module only figures out defauls for RedHat 5 and 6' )
+      }
+    }
+  }
 
   package { 'nfs_package':
     ensure => installed,
-    name   => $nfs::data::nfs_package,
+    name   => $use_package,
   }
 
-  if $::lsbmajdistrelease == '6' {
+  if $::osfamily == 'RedHat' and $::lsbmajdistrelease == '6' {
     service { 'rpcbind':
       ensure     => running,
       name       => 'rpcbind',

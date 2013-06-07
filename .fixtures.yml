@@ -1,3 +1,6 @@
 fixtures:
+  repositories:
+    "network": "git://github.com/ghoneycutt/puppet-network.git"
   symlinks:
     "nfs": "#{source_dir}"
+

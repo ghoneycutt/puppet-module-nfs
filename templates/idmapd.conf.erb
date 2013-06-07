@@ -6,7 +6,7 @@
 # The following should be set to the local NFSv4 domain name
 # The default is the host's DNS domain name.
 #Domain = local.domain.edu
-<% if idmap_domain != 'UNSET' %>Domain = <%= idmap_domain %><% end %>
+<% if @domain %>Domain = <%= @domain %><% end %>
 
 # The following is a comma-separated list of Kerberos realm
 # names that should be considered to be equivalent to the
