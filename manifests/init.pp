@@ -15,8 +15,6 @@ class nfs(
     include nfs::idmap
   }
 
-notice ($package)
-
   if $package {
     $use_package = $package
   } else {
@@ -32,8 +30,6 @@ notice ($package)
       }
     }
   }
-
-notice ($use_package)
 
   package { 'nfs_package':
     ensure => installed,

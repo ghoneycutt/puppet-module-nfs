@@ -17,7 +17,9 @@ class nfs::server(
     fail( "Unsupported platform: ${::osfamily} ${::lsbrelease}. Supported OSes are RedHat 5 and 6" )
   }
 
-  create_resources( nfs::server::export, $exports_data )
+  if $exports_data {
+    create_resources( nfs::server::export, $exports_data )
+  }
 
   file { 'exports_d':
     ensure => directory,
