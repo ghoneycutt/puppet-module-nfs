@@ -4,6 +4,7 @@
 # exports to other puppet masters
 #
 /var/lib/hiera 142.133.166.162(ro)
-/etc/puppet 142.133.166.162(ro,no_root_squash)
+/etc/puppet/manifests 142.133.166.162(ro,no_root_squash)
+/var/local/puppet-modules/modules 142.133.166.162(ro,no_root_squash)
 /var/lib/puppet/clientbucket 142.133.166.162(rw,no_root_squash)
 /var/lib/puppet/yaml 142.133.166.162(rw,no_root_squash)
