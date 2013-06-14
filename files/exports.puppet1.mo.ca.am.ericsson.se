@@ -7,5 +7,6 @@
 /etc/puppet/manifests 142.133.166.162(ro,no_root_squash)
 /var/local/old_eis_modules/modules/eiscm 142.133.166.162(ro,no_root_squash)
 /var/local/puppet-modules/modules 142.133.166.162(ro,no_root_squash)
+/var/local/params 142.133.166.162(ro,no_root_squash)
 /var/lib/puppet/clientbucket 142.133.166.162(rw,no_root_squash)
 /var/lib/puppet/yaml 142.133.166.162(rw,no_root_squash)
