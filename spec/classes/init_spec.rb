@@ -54,39 +54,13 @@ describe 'nfs' do
         })
       }
     end
-    describe 'debian systems should fail' do
+
+    context 'on unsupported platform, Debian, should fail' do
       let(:facts) { {:osfamily => 'debian' } }
       it do
         expect {
           should include_class('rsyslog')
         }.to raise_error(Puppet::Error,/nfs module only supports osfamily 'RedHat' and debian was detected./)
-      end
-    end
-
-    describe 'SuSE systems should fail' do
-      let(:facts) { {:osfamily => 'suse' } }
-      it do
-        expect {
-          should include_class('rsyslog')
-        }.to raise_error(Puppet::Error,/nfs module only supports osfamily 'RedHat' and suse was detected./)
-      end
-    end
-
-    describe 'Gentoo systems should fail' do
-      let(:facts) { {:osfamily => 'Gentoo' } }
-      it do
-        expect {
-          should include_class('rsyslog')
-        }.to raise_error(Puppet::Error,/nfs module only supports osfamily 'RedHat' and Gentoo was detected./)
-      end
-    end
-
-    describe 'Solaris systems should fail' do
-      let(:facts) { {:osfamily => 'solaris' } }
-      it do
-        expect {
-          should include_class('rsyslog')
-        }.to raise_error(Puppet::Error,/nfs module only supports osfamily 'RedHat' and solaris was detected./)
       end
     end
   end
