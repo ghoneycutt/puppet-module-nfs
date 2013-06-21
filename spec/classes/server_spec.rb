@@ -3,7 +3,7 @@ describe 'nfs::server' do
 
   describe 'class nfs::server' do
 
-    context 'default options for RHEL 5' do
+    context 'default options for EL 5' do
       let :facts do 
         {
           :osfamily => 'RedHat',
@@ -39,7 +39,7 @@ describe 'nfs::server' do
       }
     end
 
-    context 'default options for RHEL 6' do
+    context 'default options for EL 6' do
       let :facts do 
         {
           :osfamily => 'RedHat',

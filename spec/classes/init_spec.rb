@@ -3,7 +3,7 @@ describe 'nfs' do
 
   describe 'class nfs' do
 
-    context 'default options for RHEL 5' do
+    context 'default options for EL 5' do
       let :facts do 
         {
           :osfamily => 'RedHat',
@@ -19,9 +19,17 @@ describe 'nfs' do
           'ensure' => 'installed',
         })
       }
+
+      it {
+        should_not contain_service('rpcbind').with({
+          'ensure' => 'running',
+          'name'   => 'rpcbind',
+          'enable' => 'true',
+        })
+      }
     end
 
-    context 'default options for RHEL 6' do
+    context 'default options for EL 6' do
       let :facts do 
         {
           :osfamily => 'RedHat',

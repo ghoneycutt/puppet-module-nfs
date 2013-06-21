@@ -3,7 +3,7 @@ describe 'nfs::idmap' do
 
   describe 'class nfs::idmap' do
 
-    context 'default options for RHEL 5' do
+    context 'default options for EL 5' do
       let :facts do 
         {
           :osfamily => 'RedHat',
@@ -37,9 +37,10 @@ describe 'nfs::idmap' do
           'enable' => 'true',
         })
       }
+
     end
 
-    context 'default options for RHEL 6' do
+    context 'default options for EL 6' do
       let :facts do 
         {
           :osfamily => 'RedHat',
@@ -74,6 +75,7 @@ describe 'nfs::idmap' do
         })
       }
     end
+
     describe 'debian systems should fail' do
       let(:facts) { {:osfamily => 'debian' } }
       it do 
