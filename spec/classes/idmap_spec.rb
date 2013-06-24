@@ -2,6 +2,11 @@ require 'spec_helper'
 describe 'nfs::idmap' do
 
   context 'default options for EL 5' do
+    let :params do
+      {
+        :idmap_domain   => 'UNSET',
+      }
+    end
     let :facts do 
       {
         :osfamily => 'RedHat',
@@ -26,6 +31,7 @@ describe 'nfs::idmap' do
         'group' => 'root',
         'mode'  => '0644',
       })
+      should contain_file('idmapd_conf').with_content(/#Domain = local.domain.edu\n\n\n/)
     }
 
     it {
@@ -64,6 +70,11 @@ describe 'nfs::idmap' do
   end
 
   context 'default options for EL 6' do
+    let :params do
+      {
+        :idmap_domain   => 'UNSET',
+      }
+    end
     let :facts do 
       {
         :osfamily => 'RedHat',
@@ -88,6 +99,7 @@ describe 'nfs::idmap' do
         'group' => 'root',
         'mode'  => '0644',
       })
+      should contain_file('idmapd_conf').with_content(/#Domain = local.domain.edu\n\n\n/)
     }
 
     it {
