@@ -2,11 +2,11 @@
 #
 # Manages idmapd
 #
-class nfs::idmap {
+class nfs::idmap (
+  $idmap_domain = $nfs::data::idmap_domain,
+) {
 
   include nfs::data
-
-  $idmap_domain = $nfs::data::idmap_domain
 
   package { 'idmap_package':
     ensure => installed,
