@@ -2,21 +2,22 @@
 #
 # Manages an NFS Server
 #
-class nfs::server {
-
-  include nfs::data
+class nfs::server (
+  $exports_path   = '/etc/exports',
+  $exports_owner  = 'root',
+  $exports_group  = 'root',
+  $exports_mode   = '0644',
+) {
 
   require 'nfs'
 
+  # GH: TODO - use file fragment pattern
   file { 'nfs_exports':
     ensure => file,
-    source => [ "puppet:///modules/nfs/exports.${::fqdn}",
-                $nfs::data::exports_source,
-              ],
-    path   => $nfs::data::exports_path,
-    owner  => $nfs::data::exports_owner,
-    group  => $nfs::data::exports_group,
-    mode   => $nfs::data::exports_mode,
+    path   => $exports_path,
+    owner  => $exports_owner,
+    group  => $exports_group,
+    mode   => $exports_mode,
     notify => Exec['update_nfs_exports'],
   }
 
