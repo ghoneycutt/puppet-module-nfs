@@ -2,36 +2,98 @@
 #
 # Manages idmapd
 #
-class nfs::idmap {
+class nfs::idmap (
+  $idmap_package             = 'nfs-utils-lib',
+  $idmapd_conf_path          = '/etc/idmapd.conf',
+  $idmapd_conf_owner         = 'root',
+  $idmapd_conf_group         = 'root',
+  $idmapd_conf_mode          = '0644',
+  $idmapd_service_name       = 'rpcidmapd',
+  $idmapd_service_enable     = true,
+  $idmapd_service_hasstatus  = true,
+  $idmapd_service_hasrestart = true,
+  # idmapd.conf options
+  $idmap_domain              = 'UNSET',
+  $ldap_server               = 'UNSET',
+  $ldap_base                 = 'UNSET',
+  $local_realms              = $::domain,
+  $translation_method        = 'nsswitch',
+  $nobody_user               = 'nobody',
+  $nobody_group              = 'nobody',
+  $verbosity                 = '0',
+) {
 
-  include nfs::data
+  $is_ldap_server_valid = is_domain_name($ldap_server)
+  if $is_ldap_server_valid != true {
+    fail("ldap_server parameter, <${ldap_server}>, is not a valid name.")
+  }
+  validate_re($verbosity, '^(\d+)$', "verbosity parameter, <${verbosity}>, does not match regex.")
 
-  $idmap_domain = $nfs::data::idmap_domain
+  $ldap_base_type = type($ldap_base)
+
+  case $ldap_base_type {
+    'String': {
+      $ldap_base_real = $ldap_base
+    }
+    'Array': {
+      $ldap_base_real = inline_template('<%= ldap_base.join(\',\') %>')
+    }
+    default: {
+      fail("valid types for ldap_base are String and Array. Detected type is <${ldap_base_type}>")
+    }
+  }
+
+  $local_realms_type = type($local_realms)
+
+  case $local_realms_type {
+    'String': {
+      $local_realms_real = $local_realms
+    }
+    'Array': {
+      $local_realms_real = inline_template('<%= local_realms.join(\',\') %>')
+    }
+    default: {
+      fail("valid types for local_realms are String and Array. Detected type is <${local_realms_type}>")
+    }
+  }
+
+  $translation_method_type = type($translation_method)
+
+  case $translation_method_type {
+    'String': {
+      $translation_method_real = $translation_method
+      validate_re($translation_method_real, '^(nsswitch|umich_ldap|static)$', "translation_method, <${translation_method}>, does not match regex.")
+    }
+    'Array': {
+      $translation_method_real = inline_template('<%= translation_method.join(\',\') %>')
+      # GH: TODO: write valid regex
+    }
+    default: {
+      fail("valid types for translation_method are String and Array. Detected type is <${translation_method_type}>")
+    }
+  }
 
   package { 'idmap_package':
     ensure => installed,
-    name   => $nfs::data::idmap_package,
+    name   => $idmap_package,
   }
 
   file { 'idmapd_conf':
     ensure  => file,
-    path    => $nfs::data::idmapd_conf_path,
+    path    => $idmapd_conf_path,
     content => template('nfs/idmapd.conf.erb'),
-    owner   => $nfs::data::idmapd_conf_owner,
-    group   => $nfs::data::idmapd_conf_group,
-    mode    => $nfs::data::idmapd_conf_mode,
+    owner   => $idmapd_conf_owner,
+    group   => $idmapd_conf_group,
+    mode    => $idmapd_conf_mode,
     require => Package['idmap_package'],
   }
 
   service { 'idmapd_service':
     ensure     => running,
-    name       => $nfs::data::idmapd_service_name,
-    enable     => $nfs::data::idmapd_service_enable,
-    hasstatus  => $nfs::data::idmapd_service_hasstatus,
-    hasrestart => $nfs::data::idmapd_service_hasrestart,
+    name       => $idmapd_service_name,
+    enable     => $idmapd_service_enable,
+    hasstatus  => $idmapd_service_hasstatus,
+    hasrestart => $idmapd_service_hasrestart,
     subscribe  => File['idmapd_conf'],
-    require    => [ Service['network'],
-                    File['nsswitch_config_file'],
-                  ],
   }
 }
