@@ -55,19 +55,11 @@ describe 'nfs' do
     end
 
     it { should include_class('nfs::idmap') }
+    it { should include_class('rpcbind') }
     it {
       should contain_package('nfs_package').with({
         'ensure' => 'installed',
-        'name'   => ['nfs-utils', 'rpcbind'],
-      })
-    }
-    it {
-      should contain_service('rpcbind').with({
-        'ensure'     => 'running',
-        'name'       => 'rpcbind',
-        'enable'     => 'true',
-        'hasstatus'  => 'true',
-        'hasrestart' => 'true',
+        'name'   => 'nfs-utils',
       })
     }
   end

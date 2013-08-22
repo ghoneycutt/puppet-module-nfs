@@ -15,7 +15,7 @@ class nfs (
           $default_nfs_package = 'nfs-utils'
         }
         '6': {
-          $default_nfs_package =  ['nfs-utils','rpcbind']
+          $default_nfs_package =  'nfs-utils'
         }
         default: {
           fail("nfs module only supports EL 5 and 6 and lsbmajdistrelease was detected as <${::lsbmajdistrelease}>.")
@@ -39,12 +39,6 @@ class nfs (
   }
 
   if $::lsbmajdistrelease == '6' {
-    service { 'rpcbind':
-      ensure     => running,
-      name       => 'rpcbind',
-      enable     => true,
-      hasstatus  => true,
-      hasrestart => true,
-    }
+    include rpcbind
   }
 }
