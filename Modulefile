@@ -8,3 +8,4 @@ description 'Manage NFS for client and server, including idmap'
 project_page 'https://github.com/ghoneycutt/puppet-module-nfs'
 
 dependency 'puppetlabs/stdlib', '3.2.x'
+dependency 'ghoneycutt/rpcbind', '>= 0.1.0'
