@@ -4,6 +4,7 @@
 #
 class nfs (
   $nfs_package = 'USE_DEFAULTS',
+  $mounts      = undef,
 ) {
 
   include nfs::idmap
@@ -40,5 +41,14 @@ class nfs (
 
   if $::lsbmajdistrelease == '6' {
     include rpcbind
+  }
+
+  if $mounts != undef {
+    $mounts_type = type($mounts)
+    if $mounts_type == 'hash' {
+      create_resources(mount, $mounts)
+    } else {
+      fail("Mounts parameter needs to be of type hash. Detected type is <${::mounts_type}>.")
+    }
   }
 }
