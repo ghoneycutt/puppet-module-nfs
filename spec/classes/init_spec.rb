@@ -63,4 +63,48 @@ describe 'nfs' do
       })
     }
   end
+
+  context 'with the mounts parameter set' do
+    let :facts do
+      { :osfamily          => 'RedHat',
+        :lsbmajdistrelease => '6',
+      }
+    end
+
+    let :params do
+      { :mounts => {
+        '/var/foo' => {
+          'ensure' => 'present',
+          'fstype' => 'nfs',
+          'device' => '/net/foo',
+        }
+      } }
+    end
+
+    it {
+      should contain_mount('/var/foo').with({
+        'ensure' => 'present',
+        'fstype' => 'nfs',
+        'device' => '/net/foo',
+      })
+    }
+  end
+
+  context 'with the mounts parameter set to an incorrect type' do
+    let :facts do
+      { :osfamily          => 'RedHat',
+        :lsbmajdistrelease => '6',
+      }
+    end
+
+    let :params do
+      { :mounts => 'i should be a hash' }
+    end
+
+    it 'should fail' do
+      expect {
+        should raise_error(Puppet::Error)
+      }
+    end
+  end
 end
