@@ -40,4 +40,41 @@ describe 'nfs::server' do
       })
     }
   end
+
+  context 'default options for EL 5' do
+    let :facts do
+      {
+        :osfamily => 'RedHat',
+        :lsbmajdistrelease => '5',
+      }
+    end
+
+    it { should include_class('nfs') }
+    it { should include_class('nfs::idmap') }
+
+    it {
+      should contain_exec('update_nfs_exports').with({
+        'command' => 'exportfs -ra',
+        'path'    => '/bin:/usr/bin:/sbin:/usr/sbin',
+      })
+    }
+
+    it {
+      should contain_file('nfs_exports').with({
+        'path'  => '/etc/exports',
+        'owner' => 'root',
+        'group' => 'root',
+        'mode'  => '0644',
+      })
+    }
+
+    it {
+      should contain_service('nfs_service').with({
+        'ensure' => 'running',
+        'name'   => 'nfs',
+        'enable' => 'true',
+      })
+    }
+  end
+
 end
