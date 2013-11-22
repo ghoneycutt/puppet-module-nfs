@@ -7,15 +7,27 @@ class nfs (
   $mounts      = undef,
 ) {
 
-  include nfs::idmap
-
   case $::osfamily {
-    'redhat': {
+    'Debian': {
+      $default_nfs_package = 'nfs-common'
+
+      service { 'nfs-common':
+        ensure    => running,
+        enable    => true,
+        subscribe => Package['nfs_package'],
+      }
+    }
+    'Redhat': {
+
+      include nfs::idmap
+
       case $::lsbmajdistrelease {
         '5': {
           $default_nfs_package = 'nfs-utils'
         }
         '6': {
+          include rpcbind
+
           $default_nfs_package =  'nfs-utils'
         }
         default: {
@@ -24,7 +36,7 @@ class nfs (
       }
     }
     default: {
-      fail("nfs module only supports osfamily RedHat and <${::osfamily}> was detected.")
+      fail("nfs module only supports osfamilies Debian and RedHat and <${::osfamily}> was detected.")
     }
   }
 
@@ -37,10 +49,6 @@ class nfs (
   package { 'nfs_package':
     ensure => installed,
     name   => $nfs_package_real,
-  }
-
-  if $::lsbmajdistrelease == '6' {
-    include rpcbind
   }
 
   if $mounts != undef {

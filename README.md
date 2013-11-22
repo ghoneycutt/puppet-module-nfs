@@ -2,11 +2,15 @@
 
 [![Build Status](https://travis-ci.org/ghoneycutt/puppet-module-nfs.png?branch=master)](https://travis-ci.org/ghoneycutt/puppet-module-nfs)
 
-Puppet module to manage NFS
+Puppet module to manage NFS client and server
 
 ===
 
 # Compatibility #
+
+This module has been tested to work on the following systems with Puppet v3.
+
+ * Debian 6 (client only)
  * EL 5
  * EL 6
 
