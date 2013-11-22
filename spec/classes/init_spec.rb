@@ -4,12 +4,12 @@ describe 'nfs' do
 
   context 'on unsupported osfamily' do
     let :facts do
-      { :osfamily => 'Debian' }
+      { :osfamily => 'AIX' }
     end
 
     it 'should fail' do
       expect {
-        should raise_error(Puppet::Error, /nfs module only supports osfamily RedHat and <Debian> was detected./)
+        should raise_error(Puppet::Error, /nfs module only supports osfamilies Debian and RedHat and <AIX> was detected./)
       }
     end
   end
@@ -38,6 +38,8 @@ describe 'nfs' do
     end
 
     it { should include_class('nfs::idmap') }
+    it { should_not include_class('rpcbind') }
+
     it {
       should contain_package('nfs_package').with({
         'ensure' => 'installed',
@@ -56,10 +58,33 @@ describe 'nfs' do
 
     it { should include_class('nfs::idmap') }
     it { should include_class('rpcbind') }
+
     it {
       should contain_package('nfs_package').with({
         'ensure' => 'installed',
         'name'   => 'nfs-utils',
+      })
+    }
+  end
+
+  context 'on Debian' do
+    let(:facts) { { :osfamily => 'Debian' } }
+
+    it { should_not include_class('nfs::idmap') }
+    it { should_not include_class('rpcbind') }
+
+    it {
+      should contain_package('nfs_package').with({
+        'ensure' => 'installed',
+        'name'   => 'nfs-common',
+      })
+    }
+
+    it {
+      should contain_service('nfs-common').with({
+        'ensure'    => 'running',
+        'enable'    => true,
+        'subscribe' => 'Package[nfs_package]',
       })
     }
   end
