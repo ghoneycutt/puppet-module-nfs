@@ -52,11 +52,7 @@ class nfs (
   }
 
   if $mounts != undef {
-    $mounts_type = type($mounts)
-    if $mounts_type == 'hash' {
-      create_resources(mount, $mounts)
-    } else {
-      fail("Mounts parameter needs to be of type hash. Detected type is <${::mounts_type}>.")
-    }
+    validate_hash($mounts)
+    create_resources('types::mount',$mounts)
   }
 }
