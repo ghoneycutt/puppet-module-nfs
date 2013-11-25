@@ -54,6 +54,8 @@ class nfs (
   if $mounts != undef {
     $mounts_type = type($mounts)
     if $mounts_type == 'hash' {
+    $mount_targets = keys($mounts) 
+    file {"${mount_targets}": ensure => 'directory', owner => 'root', group => 'root', } 
       create_resources(mount, $mounts)
     } else {
       fail("Mounts parameter needs to be of type hash. Detected type is <${::mounts_type}>.")
