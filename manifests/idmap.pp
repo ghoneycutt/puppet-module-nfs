@@ -73,9 +73,21 @@ class nfs::idmap (
     }
   }
 
+  case $::osfamily {
+    'Redhat' : {
+      $idmap_package_real = $idmap_package
+    }
+    'Suse' : {
+      $idmap_package_real = 'nfsidmap'
+    }
+    default: {
+      fail( "idmap only supports Redhat and Suse osfamilies, not ${::osfamily}" )
+    }
+  }
+
   package { 'idmap_package':
     ensure => installed,
-    name   => $idmap_package,
+    name   => $idmap_package_real,
   }
 
   file { 'idmapd_conf':
@@ -88,12 +100,15 @@ class nfs::idmap (
     require => Package['idmap_package'],
   }
 
-  service { 'idmapd_service':
-    ensure     => running,
-    name       => $idmapd_service_name,
-    enable     => $idmapd_service_enable,
-    hasstatus  => $idmapd_service_hasstatus,
-    hasrestart => $idmapd_service_hasrestart,
-    subscribe  => File['idmapd_conf'],
+  if $::osfamily != 'Suse' {
+
+    service { 'idmapd_service':
+      ensure     => running,
+      name       => $idmapd_service_name,
+      enable     => $idmapd_service_enable,
+      hasstatus  => $idmapd_service_hasstatus,
+      hasrestart => $idmapd_service_hasrestart,
+      subscribe  => File['idmapd_conf'],
+    }
   }
 }
