@@ -11,6 +11,6 @@ fixtures:
       ref: '3.2.0'
     'types':
       repo: 'git://github.com/ghoneycutt/puppet-module-types.git'
-      ref: 'v1.0.0'
+      ref: 'v1.1.0'
   symlinks:
     'nfs': "#{source_dir}"

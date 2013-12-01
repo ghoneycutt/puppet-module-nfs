@@ -1,5 +1,4 @@
 require 'spec_helper'
-
 describe 'nfs' do
 
   context 'on unsupported osfamily' do
@@ -29,6 +28,21 @@ describe 'nfs' do
     end
   end
 
+  context 'on unsupported lsbdistid of osfamily Debian' do
+    let :facts do
+      {
+        :osfamily  => 'Debian',
+        :lsbdistid => 'unsupported',
+      }
+    end
+
+    it 'should fail' do
+      expect {
+        should raise_error(Puppet::Error, /nfs module only supports lsbdistid Debian and Ubuntu of osfamily Debian. Detected lsbdistid is <unsupported>./)
+      }
+    end
+  end
+
   context 'on EL 5' do
     let :facts do
       {
@@ -37,13 +51,24 @@ describe 'nfs' do
       }
     end
 
-    it { should include_class('nfs::idmap') }
-    it { should_not include_class('rpcbind') }
+    it { should compile.with_all_deps }
+
+    it { should contain_class('nfs::idmap') }
+    it { should_not contain_class('rpcbind') }
 
     it {
       should contain_package('nfs_package').with({
         'ensure' => 'installed',
         'name'   => 'nfs-utils',
+      })
+    }
+
+    it {
+      should contain_service('nfs_service').with({
+        'ensure'    => 'running',
+        'name'      => 'nfs',
+        'enable'    => true,
+        'subscribe' => 'Package[nfs_package]',
       })
     }
   end
@@ -56,8 +81,10 @@ describe 'nfs' do
       }
     end
 
-    it { should include_class('nfs::idmap') }
-    it { should include_class('rpcbind') }
+    it { should compile.with_all_deps }
+
+    it { should contain_class('nfs::idmap') }
+    it { should contain_class('rpcbind') }
 
     it {
       should contain_package('nfs_package').with({
@@ -65,13 +92,28 @@ describe 'nfs' do
         'name'   => 'nfs-utils',
       })
     }
+
+    it {
+      should contain_service('nfs_service').with({
+        'ensure'    => 'running',
+        'name'      => 'nfs',
+        'enable'    => true,
+        'subscribe' => 'Package[nfs_package]',
+      })
+    }
   end
 
-  context 'on Debian' do
-    let(:facts) { { :osfamily => 'Debian' } }
+  context 'on Ubuntu' do
+    let(:facts) do
+      { :osfamily  => 'Debian',
+        :lsbdistid => 'Ubuntu',
+      }
+    end
 
-    it { should_not include_class('nfs::idmap') }
-    it { should_not include_class('rpcbind') }
+    it { should compile.with_all_deps }
+
+    it { should_not contain_class('nfs::idmap') }
+    it { should contain_class('rpcbind') }
 
     it {
       should contain_package('nfs_package').with({
@@ -81,8 +123,93 @@ describe 'nfs' do
     }
 
     it {
-      should contain_service('nfs-common').with({
+      should_not contain_service('nfs_service').with({
         'ensure'    => 'running',
+        'name'      => 'nfs-common',
+        'enable'    => true,
+        'subscribe' => 'Package[nfs_package]',
+      })
+    }
+  end
+
+  context 'on Debian' do
+    let(:facts) do
+      { :osfamily  => 'Debian',
+        :lsbdistid => 'Debian',
+      }
+    end
+
+    it { should compile.with_all_deps }
+
+    it { should_not contain_class('nfs::idmap') }
+    it { should contain_class('rpcbind') }
+
+    it {
+      should contain_package('nfs_package').with({
+        'ensure' => 'installed',
+        'name'   => 'nfs-common',
+      })
+    }
+
+    it {
+      should contain_service('nfs_service').with({
+        'ensure'    => 'running',
+        'name'      => 'nfs-common',
+        'enable'    => true,
+        'subscribe' => 'Package[nfs_package]',
+      })
+    }
+  end
+
+  context 'on Suse' do
+    let(:facts) { { :osfamily => 'Suse' } }
+
+    it { should compile.with_all_deps }
+
+    it { should contain_class('nfs::idmap') }
+    it { should_not contain_class('rpcbind') }
+
+    it {
+      should contain_package('nfs_package').with({
+        'ensure' => 'installed',
+        'name'   => 'nfs-client',
+      })
+    }
+
+    it {
+      should contain_service('nfs_service').with({
+        'ensure'    => 'running',
+        'name'      => 'nfs',
+        'enable'    => true,
+        'subscribe' => 'Package[nfs_package]',
+      })
+    }
+  end
+
+  context 'on Solaris' do
+    let(:facts) { { :osfamily => 'Solaris' } }
+
+    it { should compile.with_all_deps }
+
+    it { should_not contain_class('nfs::idmap') }
+    it { should_not contain_class('rpcbind') }
+
+    it {
+      should contain_package('nfs_package').with({
+        'ensure' => 'installed',
+        'name'   => [ 'SUNWnfsckr',
+                      'SUNWnfscr',
+                      'SUNWnfscu',
+                      'SUNWnfsskr',
+                      'SUNWnfssr',
+                      'SUNWnfssu' ],
+      })
+    }
+
+    it {
+      should contain_service('nfs_service').with({
+        'ensure'    => 'running',
+        'name'      => 'nfs/client',
         'enable'    => true,
         'subscribe' => 'Package[nfs_package]',
       })

@@ -16,3 +16,14 @@ tmp
 .yardoc
 _yardoc
 doc/
+
+# Vim
+*.swp
+
+# OS X
+.DS_Store
+
+# Puppet
+metadata.json
+coverage/
+spec/fixtures/

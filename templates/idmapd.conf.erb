@@ -3,9 +3,9 @@
 #
 [General]
 Verbosity = <%= verbosity %>
+<% if pipefs_directory_real != 'UNSET' %>Pipefs-Directory = /var/lib/nfs/rpc_pipefs<% end %>
 # The following should be set to the local NFSv4 domain name
 # The default is the host's DNS domain name.
-#Domain = local.domain.edu
 <% if idmap_domain != 'UNSET' %>Domain = <%= idmap_domain %><% end %>
 
 # The following is a comma-separated list of Kerberos realm

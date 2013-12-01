@@ -10,13 +10,25 @@ class nfs (
 
   case $::osfamily {
     'Debian': {
-      $default_nfs_package = 'nfs-common'
-      $default_nfs_service = 'nfs-common'
 
+      include rpcbind
+      $default_nfs_package = 'nfs-common'
+
+      case $::lsbdistid {
+        'Debian': {
+          $default_nfs_service = 'nfs-common'
+        }
+        'Ubuntu': {
+          $default_nfs_service = undef
+        }
+        default: {
+          fail("nfs module only supports lsbdistid Debian and Ubuntu of osfamily Debian. Detected lsbdistid is <${::lsbdistid}>.")
+        }
+      }
     }
     'Redhat': {
-
       include nfs::idmap
+      $default_nfs_service = 'nfs'
 
       case $::lsbmajdistrelease {
         '5': {
@@ -40,10 +52,11 @@ class nfs (
                               'SUNWnfssr',
                               'SUNWnfssu']
 
-      $default_nfs_service         = 'nfs/client'
+      $default_nfs_service = 'nfs/client'
     }
     'Suse' : {
       include nfs::idmap
+
       $default_nfs_package = 'nfs-client'
       $default_nfs_service = 'nfs'
     }
@@ -64,15 +77,19 @@ class nfs (
   } else {
     $nfs_service_real = $nfs_service
   }
-  package { $nfs_package_real:
-    ensure    => installed,
-    #name     => $nfs_package_real,
+
+  package { 'nfs_package':
+    ensure => installed,
+    name   => $nfs_package_real,
   }
 
-  service { $nfs_service_real:
-    ensure    => running,
-    enable    => true,
-    subscribe => Package[$nfs_package_real],
+  if $nfs_service_real {
+    service { 'nfs_service':
+      ensure    => running,
+      name      => $nfs_service_real,
+      enable    => true,
+      subscribe => Package['nfs_package'],
+    }
   }
 
   if $mounts != undef {
