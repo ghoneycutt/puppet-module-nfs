@@ -43,6 +43,7 @@ nfs::mounts:
   /mnt/vol1:
     ensure: present
     device: nfs.example.com:/vol1
+    options: rw,rsize=8192,wsize=8192
     fstype: nfs
   old_log_file_mount:
     name: /mnt/vol2
@@ -50,3 +51,6 @@ nfs::mounts:
     device: nfs.example.com:/vol2
     fstype: nfs
 </pre>
+
+## Creating Hiera data from existing system
+This module contains `ext/fstabnfs2yaml.rb`, which is a script that will parse `/etc/fstab` and print out the nfs::mounts hash in YAML with which you can copy/paste into Hiera.
