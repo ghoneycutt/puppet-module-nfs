@@ -7,9 +7,7 @@ class nfs::server (
   $exports_owner  = 'root',
   $exports_group  = 'root',
   $exports_mode   = '0644',
-) {
-
-  require 'nfs'
+) inherits nfs {
 
   # GH: TODO - use file fragment pattern
   file { 'nfs_exports':
@@ -27,9 +25,8 @@ class nfs::server (
     refreshonly => true,
   }
 
-  service { 'nfs_service':
+  Service ['nfs_service'] {
     ensure     => running,
-    name       => 'nfs',
     enable     => true,
     hasstatus  => true,
     hasrestart => true,

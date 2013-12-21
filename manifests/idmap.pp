@@ -3,7 +3,7 @@
 # Manages idmapd
 #
 class nfs::idmap (
-  $idmap_package             = 'nfs-utils-lib',
+  $idmap_package             = 'USE_DEFAULTS',
   $idmapd_conf_path          = '/etc/idmapd.conf',
   $idmapd_conf_owner         = 'root',
   $idmapd_conf_group         = 'root',
@@ -13,7 +13,7 @@ class nfs::idmap (
   $idmapd_service_hasstatus  = true,
   $idmapd_service_hasrestart = true,
   # idmapd.conf options
-  $idmap_domain              = 'UNSET',
+  $idmap_domain              = $::domain,
   $ldap_server               = 'UNSET',
   $ldap_base                 = 'UNSET',
   $local_realms              = $::domain,
@@ -21,11 +21,17 @@ class nfs::idmap (
   $nobody_user               = 'nobody',
   $nobody_group              = 'nobody',
   $verbosity                 = '0',
+  $pipefs_directory          = 'USE_DEFAULTS',
 ) {
+
+  $is_idmap_domain_valid = is_domain_name($idmap_domain)
+  if $is_idmap_domain_valid != true {
+    fail("nfs::idmap::idmap_domain parameter, <${idmap_domain}>, is not a valid name.")
+  }
 
   $is_ldap_server_valid = is_domain_name($ldap_server)
   if $is_ldap_server_valid != true {
-    fail("ldap_server parameter, <${ldap_server}>, is not a valid name.")
+    fail("nfs::idmap::ldap_server parameter, <${ldap_server}>, is not a valid name.")
   }
   validate_re($verbosity, '^(\d+)$', "verbosity parameter, <${verbosity}>, does not match regex.")
 
@@ -73,9 +79,39 @@ class nfs::idmap (
     }
   }
 
+  case $::osfamily {
+    'Redhat' : {
+      $default_idmap_package    = 'nfs-utils-lib'
+      $default_pipefs_directory = 'UNSET'
+    }
+    'Suse' : {
+      $default_idmap_package    = 'nfsidmap'
+      $default_pipefs_directory = '/var/lib/nfs/rpc_pipefs'
+    }
+    default: {
+      fail( "idmap only supports Redhat and Suse osfamilies, not ${::osfamily}" )
+    }
+  }
+
+  if $idmap_package == 'USE_DEFAULTS' {
+    $idmap_package_real = $default_idmap_package
+  } else {
+    $idmap_package_real = $idmap_package
+  }
+
+  if $pipefs_directory == 'USE_DEFAULTS' {
+    $pipefs_directory_real = $default_pipefs_directory
+  } else {
+    $pipefs_directory_real = $pipefs_directory
+  }
+
+  if $pipefs_directory_real != 'UNSET' {
+    validate_absolute_path($pipefs_directory_real)
+  }
+
   package { 'idmap_package':
     ensure => installed,
-    name   => $idmap_package,
+    name   => $idmap_package_real,
   }
 
   file { 'idmapd_conf':
@@ -88,12 +124,15 @@ class nfs::idmap (
     require => Package['idmap_package'],
   }
 
-  service { 'idmapd_service':
-    ensure     => running,
-    name       => $idmapd_service_name,
-    enable     => $idmapd_service_enable,
-    hasstatus  => $idmapd_service_hasstatus,
-    hasrestart => $idmapd_service_hasrestart,
-    subscribe  => File['idmapd_conf'],
+  if $::osfamily == 'RedHat' {
+
+    service { 'idmapd_service':
+      ensure     => running,
+      name       => $idmapd_service_name,
+      enable     => $idmapd_service_enable,
+      hasstatus  => $idmapd_service_hasstatus,
+      hasrestart => $idmapd_service_hasrestart,
+      subscribe  => File['idmapd_conf'],
+    }
   }
 }

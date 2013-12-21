@@ -1,5 +1,4 @@
 require 'spec_helper'
-
 describe 'nfs::server' do
 
   context 'with default options' do
@@ -10,8 +9,11 @@ describe 'nfs::server' do
       }
     end
 
-    it { should include_class('nfs') }
-    it { should include_class('nfs::idmap') }
+    it { should compile.with_all_deps }
+
+    it { should contain_class('nfs') }
+    it { should contain_class('nfs::idmap') }
+
     it {
       should contain_file('nfs_exports').with({
         'ensure' => 'file',
@@ -22,6 +24,7 @@ describe 'nfs::server' do
         'notify' => 'Exec[update_nfs_exports]',
       })
     }
+
     it {
       should contain_exec('update_nfs_exports').with({
         'command'     => 'exportfs -ra',
@@ -29,6 +32,7 @@ describe 'nfs::server' do
         'refreshonly' => 'true',
       })
     }
+
     it {
       should contain_service('nfs_service').with({
         'ensure'     => 'running',
@@ -49,8 +53,10 @@ describe 'nfs::server' do
       }
     end
 
-    it { should include_class('nfs') }
-    it { should include_class('nfs::idmap') }
+    it { should compile.with_all_deps }
+
+    it { should contain_class('nfs') }
+    it { should contain_class('nfs::idmap') }
 
     it {
       should contain_exec('update_nfs_exports').with({
@@ -76,5 +82,4 @@ describe 'nfs::server' do
       })
     }
   end
-
 end
