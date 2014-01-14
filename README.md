@@ -21,9 +21,21 @@ This module has been tested to work on the following systems with Puppet v3.
 
 # Parameters #
 
+hiera_array
+-----------
+Boolean to use hiera_array which merges all found instances of nfs::mounts in Hiera. This is useful for specifying mounts at different levels of the hierarchy and having them all included in the catalog. This will default to `true` in future versions.
+
+- *Default*: false
+
 nfs_package
 -----------
 Name of the NFS package
+
+- *Default*: Uses system defaults as specified in module
+
+nfs_service
+-----------
+Name of the NFS service
 
 - *Default*: Uses system defaults as specified in module
 
