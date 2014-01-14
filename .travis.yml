@@ -6,6 +6,7 @@ before_install:
 env:
 - PUPPET_VERSION=2.7.23
 - PUPPET_VERSION=3.3.2
+- PUPPET_VERSION=3.4.2
 notifications:
 email: false
 rvm:
@@ -14,6 +15,7 @@ rvm:
 matrix:
   allow_failures:
   - env: PUPPET_VERSION=2.7.23
+  - env: PUPPET_VERSION=3.4.2
 language: ruby
 before_script: "gem install --no-ri --no-rdoc bundler"
 script: 'bundle exec rake validate && bundle exec rake lint && SPEC_OPTS="--format documentation" bundle exec rake spec'
