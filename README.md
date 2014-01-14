@@ -27,6 +27,12 @@ Name of the NFS package
 
 - *Default*: Uses system defaults as specified in module
 
+nfs_service
+-----------
+Name of the NFS service
+
+- *Default*: Uses system defaults as specified in module
+
 mounts
 ------
 Hash of mounts to be mounted on system. See below.
