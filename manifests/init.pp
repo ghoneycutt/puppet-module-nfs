@@ -3,10 +3,18 @@
 # Manages NFS
 #
 class nfs (
+  $hiera_hash  = false,
   $nfs_package = 'USE_DEFAULTS',
   $nfs_service = 'USE_DEFAULTS',
   $mounts      = undef,
 ) {
+
+  if type($hiera_hash) == 'string' {
+    $hiera_hash_real = str2bool($hiera_hash)
+  } else {
+    $hiera_hash_real = $hiera_hash
+  }
+  validate_bool($hiera_hash_real)
 
   case $::osfamily {
     'Debian': {
@@ -93,7 +101,15 @@ class nfs (
   }
 
   if $mounts != undef {
-    validate_hash($mounts)
-    create_resources('types::mount',$mounts)
+
+    if $hiera_hash_real == true {
+      $mounts_real = hiera_hash('nfs::mounts')
+    } else {
+      $mounts_real = $mounts
+      notice('Future versions of the nfs module will default nfs::hiera_hash to true')
+    }
+
+    validate_hash($mounts_real)
+    create_resources('types::mount',$mounts_real)
   }
 }
