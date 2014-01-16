@@ -64,9 +64,13 @@ class nfs (
     }
     'Suse' : {
       include nfs::idmap
-
-      $default_nfs_package = 'nfs-client'
-      $default_nfs_service = 'nfs'
+      if $::lsbmajdistrelease == '10' {
+          $default_nfs_package = 'nfs-utils'
+          $default_nfs_service = 'nfs'
+        } else {
+          $default_nfs_package = 'nfs-client'
+          $default_nfs_service = 'nfs'
+        }
     }
 
     default: {
