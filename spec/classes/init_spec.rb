@@ -161,8 +161,8 @@ describe 'nfs' do
     }
   end
 
-  context 'on Suse' do
-    let(:facts) { { :osfamily => 'Suse' } }
+  context 'on Suse 11' do
+    let(:facts) { { :osfamily => 'Suse', :lsbmajdistrelease => '11'} }
 
     it { should compile.with_all_deps }
 
@@ -185,6 +185,32 @@ describe 'nfs' do
       })
     }
   end
+
+  context 'on Suse 10' do
+    let(:facts) { { :osfamily => 'Suse', :lsbmajdistrelease => '10'} }
+
+    it { should compile.with_all_deps }
+
+    it { should contain_class('nfs::idmap') }
+    it { should_not contain_class('rpcbind') }
+
+    it {
+      should contain_package('nfs_package').with({
+      'ensure' => 'installed',
+      'name'   => 'nfs-utils',
+    })
+    }
+
+    it {
+      should contain_service('nfs_service').with({
+      'ensure'    => 'running',
+      'name'      => 'nfs',
+      'enable'    => true,
+      'subscribe' => 'Package[nfs_package]',
+    })
+    }
+  end
+
 
   context 'on Solaris' do
     let(:facts) { { :osfamily => 'Solaris' } }
