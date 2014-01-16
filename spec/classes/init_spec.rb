@@ -162,7 +162,7 @@ describe 'nfs' do
   end
 
   context 'on Suse 11' do
-    let(:facts) { { :osfamily => 'Suse', :lsbmajdistreleasei => '11'} }
+    let(:facts) { { :osfamily => 'Suse', :lsbmajdistrelease => '11'} }
 
     it { should compile.with_all_deps }
 
@@ -187,7 +187,7 @@ describe 'nfs' do
   end
 
   context 'on Suse 10' do
-    let(:facts) { { :osfamily => 'Suse', :lsbmajdistreleasei => '10'} }
+    let(:facts) { { :osfamily => 'Suse', :lsbmajdistrelease => '10'} }
 
     it { should compile.with_all_deps }
 
