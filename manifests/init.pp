@@ -20,6 +20,7 @@ class nfs (
     'Debian': {
 
       include rpcbind
+
       $default_nfs_package = 'nfs-common'
 
       case $::lsbdistid {
@@ -35,7 +36,9 @@ class nfs (
       }
     }
     'Redhat': {
+
       include nfs::idmap
+
       $default_nfs_service = 'nfs'
 
       case $::lsbmajdistrelease {
@@ -63,10 +66,22 @@ class nfs (
       $default_nfs_service = 'nfs/client'
     }
     'Suse' : {
+
       include nfs::idmap
 
-      $default_nfs_package = 'nfs-client'
-      $default_nfs_service = 'nfs'
+      case $::lsbmajdistrelease {
+        '10': {
+          $default_nfs_package = 'nfs-utils'
+          $default_nfs_service = 'nfs'
+        }
+        '11': {
+          $default_nfs_package = 'nfs-client'
+          $default_nfs_service = 'nfs'
+        }
+        default: {
+          fail("nfs module only supports Suse 10 and 11 and lsbmajdistrelease was detected as <${::lsbmajdistrelease}>.")
+        }
+      }
     }
 
     default: {

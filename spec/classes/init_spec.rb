@@ -1,45 +1,57 @@
 require 'spec_helper'
 describe 'nfs' do
 
-  context 'on unsupported osfamily' do
-    let :facts do
-      { :osfamily => 'AIX' }
+  describe 'on unsupported' do
+    context 'osfamily' do
+      let(:facts) { { :osfamily => 'Unsupported' } }
+
+      it 'should fail' do
+        expect {
+          should raise_error(Puppet::Error, /^nfs module only supports osfamilies Debian and RedHat and <Unsupported> was detected./)
+        }
+      end
     end
 
-    it 'should fail' do
-      expect {
-        should raise_error(Puppet::Error, /nfs module only supports osfamilies Debian and RedHat and <AIX> was detected./)
-      }
-    end
-  end
+    context 'version of EL' do
+      let :facts do
+        { :osfamily          => 'RedHat',
+          :lsbmajdistrelease => '4',
+        }
+      end
 
-  context 'on unsupported EL version' do
-    let :facts do
-      {
-        :osfamily          => 'RedHat',
-        :lsbmajdistrelease => '4',
-      }
-    end
-
-    it 'should fail' do
-      expect {
-        should raise_error(Puppet::Error, /nfs module only supports EL 5 and 6 and lsbmajdistrelease was detected as <4>./)
-      }
-    end
-  end
-
-  context 'on unsupported lsbdistid of osfamily Debian' do
-    let :facts do
-      {
-        :osfamily  => 'Debian',
-        :lsbdistid => 'unsupported',
-      }
+      it 'should fail' do
+        expect {
+          should raise_error(Puppet::Error, /^nfs module only supports EL 5 and 6 and lsbmajdistrelease was detected as <4>./)
+        }
+      end
     end
 
-    it 'should fail' do
-      expect {
-        should raise_error(Puppet::Error, /nfs module only supports lsbdistid Debian and Ubuntu of osfamily Debian. Detected lsbdistid is <unsupported>./)
-      }
+    context 'version of Suse' do
+      let :facts do
+        { :osfamily          => 'Suse',
+          :lsbmajdistrelease => '9',
+        }
+      end
+
+      it 'should fail' do
+        expect {
+          should raise_error(Puppet::Error, /^nfs module only supports Suse 10 and 11 and lsbmajdistrelease was detected as <9>./)
+        }
+      end
+    end
+
+    context 'lsbdistid of osfamily Debian' do
+      let :facts do
+        { :osfamily  => 'Debian',
+          :lsbdistid => 'unsupported',
+        }
+      end
+
+      it 'should fail' do
+        expect {
+          should raise_error(Puppet::Error, /^nfs module only supports lsbdistid Debian and Ubuntu of osfamily Debian. Detected lsbdistid is <unsupported>./)
+        }
+      end
     end
   end
 
@@ -161,8 +173,8 @@ describe 'nfs' do
     }
   end
 
-  context 'on Suse' do
-    let(:facts) { { :osfamily => 'Suse' } }
+  context 'on Suse 11' do
+    let(:facts) { { :osfamily => 'Suse', :lsbmajdistrelease => '11'} }
 
     it { should compile.with_all_deps }
 
@@ -185,6 +197,32 @@ describe 'nfs' do
       })
     }
   end
+
+  context 'on Suse 10' do
+    let(:facts) { { :osfamily => 'Suse', :lsbmajdistrelease => '10'} }
+
+    it { should compile.with_all_deps }
+
+    it { should contain_class('nfs::idmap') }
+    it { should_not contain_class('rpcbind') }
+
+    it {
+      should contain_package('nfs_package').with({
+      'ensure' => 'installed',
+      'name'   => 'nfs-utils',
+    })
+    }
+
+    it {
+      should contain_service('nfs_service').with({
+      'ensure'    => 'running',
+      'name'      => 'nfs',
+      'enable'    => true,
+      'subscribe' => 'Package[nfs_package]',
+    })
+    }
+  end
+
 
   context 'on Solaris' do
     let(:facts) { { :osfamily => 'Solaris' } }
