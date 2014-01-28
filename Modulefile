@@ -1,5 +1,5 @@
 name    'ghoneycutt-nfs'
-version '1.6.0'
+version '1.6.1'
 source 'git://github.com/ghoneycutt/puppet-module-nfs.git'
 author 'ghoneycutt'
 license 'Apache License, Version 2.0'
