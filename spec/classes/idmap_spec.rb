@@ -13,9 +13,8 @@ describe 'nfs::idmap' do
     it { should compile.with_all_deps }
 
     it {
-      should contain_package('idmap_package').with({
-        'ensure' => 'installed',
-        'name'   => 'nfs-utils-lib',
+      should contain_package('nfs-utils-lib').with({
+        'ensure' => 'present',
       })
     }
 
@@ -26,7 +25,7 @@ describe 'nfs::idmap' do
         'owner'   => 'root',
         'group'   => 'root',
         'mode'    => '0644',
-        'require' => 'Package[idmap_package]',
+        'require' => 'Package[nfs-utils-lib]',
       })
     }
 
@@ -65,9 +64,8 @@ describe 'nfs::idmap' do
     it { should compile.with_all_deps }
 
     it {
-      should contain_package('idmap_package').with({
-        'ensure' => 'installed',
-        'name'   => 'nfsidmap',
+      should contain_package('nfsidmap').with({
+        'ensure' => 'present',
       })
     }
 
@@ -78,7 +76,7 @@ describe 'nfs::idmap' do
         'owner'   => 'root',
         'group'   => 'root',
         'mode'    => '0644',
-        'require' => 'Package[idmap_package]',
+        'require' => 'Package[nfsidmap]',
       })
     }
 

@@ -8,7 +8,7 @@ Puppet module to manage NFS client and server
 
 # Compatibility #
 
-This module has been tested to work on the following systems with Puppet v3.
+This module has been tested to work on the following systems with Puppet v3 and Ruby 1.8.7, 1.9.3, and 2.0.0.
 
  * Debian 6 (client only)
  * EL 5

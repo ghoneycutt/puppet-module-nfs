@@ -35,7 +35,7 @@ class nfs (
         }
       }
     }
-    'Redhat': {
+    'RedHat': {
 
       include nfs::idmap
 
@@ -101,9 +101,8 @@ class nfs (
     $nfs_service_real = $nfs_service
   }
 
-  package { 'nfs_package':
-    ensure => installed,
-    name   => $nfs_package_real,
+  package { $nfs_package_real:
+    ensure => present,
   }
 
   if $nfs_service_real {
@@ -111,7 +110,7 @@ class nfs (
       ensure    => running,
       name      => $nfs_service_real,
       enable    => true,
-      subscribe => Package['nfs_package'],
+      subscribe => Package[$nfs_package_real],
     }
   }
 
