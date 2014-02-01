@@ -80,7 +80,7 @@ class nfs::idmap (
   }
 
   case $::osfamily {
-    'Redhat' : {
+    'RedHat' : {
       $default_idmap_package    = 'nfs-utils-lib'
       $default_pipefs_directory = 'UNSET'
     }
@@ -89,7 +89,7 @@ class nfs::idmap (
       $default_pipefs_directory = '/var/lib/nfs/rpc_pipefs'
     }
     default: {
-      fail( "idmap only supports Redhat and Suse osfamilies, not ${::osfamily}" )
+      fail( "idmap only supports RedHat and Suse osfamilies, not ${::osfamily}" )
     }
   }
 
@@ -109,9 +109,8 @@ class nfs::idmap (
     validate_absolute_path($pipefs_directory_real)
   }
 
-  package { 'idmap_package':
-    ensure => installed,
-    name   => $idmap_package_real,
+  package { $idmap_package_real:
+    ensure => present,
   }
 
   file { 'idmapd_conf':
@@ -121,7 +120,7 @@ class nfs::idmap (
     owner   => $idmapd_conf_owner,
     group   => $idmapd_conf_group,
     mode    => $idmapd_conf_mode,
-    require => Package['idmap_package'],
+    require => Package[$idmap_package_real],
   }
 
   if $::osfamily == 'RedHat' {
