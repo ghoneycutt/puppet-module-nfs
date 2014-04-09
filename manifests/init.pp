@@ -7,6 +7,7 @@ class nfs (
   $nfs_package = 'USE_DEFAULTS',
   $nfs_service = 'USE_DEFAULTS',
   $mounts      = undef,
+  $enable_svc  = true,
 ) {
 
   if type($hiera_hash) == 'string' {
@@ -107,9 +108,9 @@ class nfs (
 
   if $nfs_service_real {
     service { 'nfs_service':
-      ensure    => running,
+      ensure    => $enable_svc,
       name      => $nfs_service_real,
-      enable    => true,
+      enable    => $enable_svc,
       subscribe => Package[$nfs_package_real],
     }
   }
