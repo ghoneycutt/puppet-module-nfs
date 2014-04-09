@@ -47,6 +47,7 @@ class nfs (
         }
         '6': {
           include rpcbind
+          Service['rpcbind_service'] -> Service['nfs_service']
 
           $default_nfs_package =  'nfs-utils'
         }
