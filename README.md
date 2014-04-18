@@ -8,12 +8,12 @@ Puppet module to manage NFS client and server
 
 ### Server
 ----------
-- Mange NFS server
+- Manage NFS server
 - Setup of exports
 
 ### Idmap
 ---------
-- Mange idmapd
+- Manage idmapd
 - Setup of configuration for idmapd
 
 
