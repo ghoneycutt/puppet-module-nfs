@@ -25,6 +25,7 @@ This module has been tested to work on the following systems with Puppet v3 and 
  * EL 5
  * EL 6
  * Solaris 10
+ * Solaris 11
  * Suse 10
  * Suse 11
  * Ubuntu 12.04 LTS
@@ -42,6 +43,12 @@ Boolean to use hiera_hash which merges all found instances of nfs::mounts in Hie
 nfs_package
 -----------
 Name of the NFS package
+
+- *Default*: Uses system defaults as specified in module
+
+nfs_package_provider
+-----------
+Name of the NFS package provider
 
 - *Default*: Uses system defaults as specified in module
 
