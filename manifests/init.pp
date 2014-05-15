@@ -56,12 +56,21 @@ class nfs (
       }
     }
     'Solaris': {
-      $default_nfs_package = ['SUNWnfsckr',
-                              'SUNWnfscr',
-                              'SUNWnfscu',
-                              'SUNWnfsskr',
-                              'SUNWnfssr',
-                              'SUNWnfssu']
+      case $::kernelrelease {
+        '5.11': {
+          $default_nfs_package = ['service/network/ssh',
+                                  'network/ssh/ssh-key',
+                                  'network/ssh']
+        }
+        default: {
+          $default_nfs_package = ['SUNWnfsckr',
+                                  'SUNWnfscr',
+                                  'SUNWnfscu',
+                                  'SUNWnfsskr',
+                                  'SUNWnfssr',
+                                  'SUNWnfssu']
+        }
+      }
 
       $default_nfs_service = 'nfs/client'
     }

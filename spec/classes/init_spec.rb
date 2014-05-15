@@ -97,6 +97,14 @@ describe 'nfs' do
         :packages        => ['SUNWnfsckr','SUNWnfscr','SUNWnfscu','SUNWnfsskr','SUNWnfssr','SUNWnfssu'],
         :service         => 'nfs/client',
       },
+    'solaris11' =>
+      { :osfamily        => 'Solaris',
+        :release         => '11',
+        :include_idmap   => false,
+        :include_rpcbind => false,
+        :packages        => ['service/network/ssh','network/ssh/ssh-key','network/ssh'],
+        :service         => 'nfs/client',
+      },
     'suse10' =>
       { :osfamily        => 'Suse',
         :release         => '10',
