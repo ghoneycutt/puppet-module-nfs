@@ -35,7 +35,7 @@ describe 'nfs::server' do
 
     it {
       should contain_service('nfs_service').with({
-        'ensure'     => 'running',
+        'ensure'     => 'true',
         'name'       => 'nfs',
         'enable'     => 'true',
         'hasstatus'  => 'true',
