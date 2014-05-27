@@ -9,6 +9,13 @@ class nfs (
   $mounts      = undef,
   $enable_svc  = true,
 ) {
+  if ($nfs_service_ensure) {
+    $nfs_service_ensure = 'running'
+    $nfs_service_enable = true
+  } else {
+    $nfs_service_ensure = 'stopped'
+    $nfs_service_enable = false
+  }
 
   if type($hiera_hash) == 'string' {
     $hiera_hash_real = str2bool($hiera_hash)
@@ -108,9 +115,9 @@ class nfs (
 
   if $nfs_service_real {
     service { 'nfs_service':
-      ensure    => $enable_svc,
+      ensure    => $nfs_service_ensure,
       name      => $nfs_service_real,
-      enable    => $enable_svc,
+      enable    => $nfs_service_enable,
       subscribe => Package[$nfs_package_real],
     }
   }
