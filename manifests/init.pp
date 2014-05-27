@@ -9,7 +9,7 @@ class nfs (
   $mounts      = undef,
   $enable_svc  = true,
 ) {
-  if ($nfs_service_ensure) {
+  if ($enable_svc) {
     $nfs_service_ensure = 'running'
     $nfs_service_enable = true
   } else {
