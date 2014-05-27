@@ -156,7 +156,7 @@ describe 'nfs' do
           if v[:service]
             it {
               should contain_service('nfs_service').with({
-                'ensure'    => 'true',
+                'ensure'    => 'running',
                 'name'      => v[:service],
                 'enable'    => true,
                 'subscribe' => service_subscribe,
@@ -173,7 +173,7 @@ describe 'nfs' do
           if v[:service]
             it {
               should contain_service('nfs_service').with({
-                'ensure'    => 'true',
+                'ensure'    => 'running',
                 'name'      => v[:service],
                 'enable'    => true,
                 'subscribe' => "Package[#{v[:packages]}]",
