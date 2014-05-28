@@ -57,17 +57,19 @@ class nfs (
     }
     'Solaris': {
       case $::kernelrelease {
-        '5.11': {
-          $default_nfs_package = ['service/file-system/nfs',
-                                  'system/file-system/nfs']
-        }
         '5.10': {
-          $default_nfs_package = ['SUNWnfsckr',
-                                  'SUNWnfscr',
-                                  'SUNWnfscu',
-                                  'SUNWnfsskr',
-                                  'SUNWnfssr',
-                                  'SUNWnfssu']
+          $default_nfs_package = [ 'SUNWnfsckr',
+                                    'SUNWnfscr',
+                                    'SUNWnfscu',
+                                    'SUNWnfsskr',
+                                    'SUNWnfssr',
+                                    'SUNWnfssu',
+          ]
+        }
+        '5.11': {
+          $default_nfs_package = [ 'service/file-system/nfs',
+                                    'system/file-system/nfs',
+          ]
         }
         default: {
           fail("nfs module only supports Solaris 5.10 and 5.11 and kernelrelease was detected as <${::kernelrelease}>.")
