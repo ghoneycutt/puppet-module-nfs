@@ -7,7 +7,7 @@ describe 'nfs' do
 
       it 'should fail' do
         expect {
-          should raise_error(Puppet::Error, /^nfs module only supports osfamilies Debian and RedHat and <Unsupported> was detected./)
+          should raise_error(Puppet::Error, /^nfs module only supports osfamilies Debian, RedHat, Solaris and Suse, and <Unsupported> was detected./)
         }
       end
     end
@@ -53,6 +53,20 @@ describe 'nfs' do
         }
       end
     end
+
+    context 'version of Solaris' do
+      let :facts do
+        { :osfamily          => 'Solaris',
+          :kernelrelease => '5.8',
+        }
+      end
+
+      it 'should fail' do
+        expect {
+          should raise_error(Puppet::Error, /^nfs module only supports Solaris 5.10 and 5.11 and kernelrelease was detected as <5.8>./)
+        }
+      end
+    end
   end
 
   platforms = {
@@ -91,10 +105,18 @@ describe 'nfs' do
       },
     'solaris10' =>
       { :osfamily        => 'Solaris',
-        :release         => '10',
+        :kernelrelease   => '5.10',
         :include_idmap   => false,
         :include_rpcbind => false,
         :packages        => ['SUNWnfsckr','SUNWnfscr','SUNWnfscu','SUNWnfsskr','SUNWnfssr','SUNWnfssu'],
+        :service         => 'nfs/client',
+      },
+    'solaris11' =>
+      { :osfamily        => 'Solaris',
+        :kernelrelease   => '5.11',
+        :include_idmap   => false,
+        :include_rpcbind => false,
+        :packages        => ['service/file-system/nfs','system/file-system/nfs'],
         :service         => 'nfs/client',
       },
     'suse10' =>
@@ -116,11 +138,12 @@ describe 'nfs' do
   }
   describe 'with default values for parameters' do
     platforms.sort.each do |k,v|
-      context "where osfamily is <#{v[:osfamily]}> lsbdistid is <#{v[:lsbdistid]}> and release is <#{v[:release]}>" do
+      context "where osfamily is <#{v[:osfamily]}> lsbdistid is <#{v[:lsbdistid]}> kernelrelease is <#{v[:kernelrelease]}> and release is <#{v[:release]}>" do
         let :facts do
           { :osfamily          => v[:osfamily],
             :lsbmajdistrelease => v[:release],
             :lsbdistid         => v[:lsbdistid],
+            :kernelrelease     => v[:kernelrelease],
           }
         end
 
