@@ -19,7 +19,7 @@ class nfs (
   case $::osfamily {
     'Debian': {
 
-      include rpcbind
+      require 'rpcbind'
 
       $default_nfs_package = 'nfs-common'
 
@@ -46,7 +46,7 @@ class nfs (
           $default_nfs_package = 'nfs-utils'
         }
         '6': {
-          include rpcbind
+          require 'rpcbind'
 
           $default_nfs_package =  'nfs-utils'
         }

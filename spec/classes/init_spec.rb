@@ -75,7 +75,7 @@ describe 'nfs' do
         :lsbdistid       => 'Debian',
         :release         => '6',
         :include_idmap   => false,
-        :include_rpcbind => true,
+        :require_rpcbind => true,
         :packages        => 'nfs-common',
         :service         => 'nfs-common',
       },
@@ -84,14 +84,14 @@ describe 'nfs' do
         :lsbdistid       => 'Ubuntu',
         :release         => '12',
         :include_idmap   => false,
-        :include_rpcbind => true,
+        :require_rpcbind => true,
         :packages        => 'nfs-common',
       },
     'el5' =>
       { :osfamily        => 'RedHat',
         :release         => '5',
         :include_idmap   => true,
-        :include_rpcbind => false,
+        :require_rpcbind => false,
         :packages        => 'nfs-utils',
         :service         => 'nfs',
       },
@@ -99,7 +99,7 @@ describe 'nfs' do
       { :osfamily        => 'RedHat',
         :release         => '6',
         :include_idmap   => true,
-        :include_rpcbind => true,
+        :require_rpcbind => true,
         :packages        => 'nfs-utils',
         :service         => 'nfs',
       },
@@ -107,7 +107,7 @@ describe 'nfs' do
       { :osfamily        => 'Solaris',
         :kernelrelease   => '5.10',
         :include_idmap   => false,
-        :include_rpcbind => false,
+        :require_rpcbind => false,
         :packages        => ['SUNWnfsckr','SUNWnfscr','SUNWnfscu','SUNWnfsskr','SUNWnfssr','SUNWnfssu'],
         :service         => 'nfs/client',
       },
@@ -115,7 +115,7 @@ describe 'nfs' do
       { :osfamily        => 'Solaris',
         :kernelrelease   => '5.11',
         :include_idmap   => false,
-        :include_rpcbind => false,
+        :require_rpcbind => false,
         :packages        => ['service/file-system/nfs','system/file-system/nfs'],
         :service         => 'nfs/client',
       },
@@ -123,7 +123,7 @@ describe 'nfs' do
       { :osfamily        => 'Suse',
         :release         => '10',
         :include_idmap   => true,
-        :include_rpcbind => false,
+        :require_rpcbind => false,
         :packages        => 'nfs-utils',
         :service         => 'nfs',
       },
@@ -131,7 +131,7 @@ describe 'nfs' do
       { :osfamily        => 'Suse',
         :release         => '11',
         :include_idmap   => true,
-        :include_rpcbind => false,
+        :require_rpcbind => false,
         :packages        => 'nfs-client',
         :service         => 'nfs',
       },
@@ -159,7 +159,7 @@ describe 'nfs' do
           it { should_not contain_class('nfs::idmap') }
         end
 
-        if v[:include_rpcbind] == true
+        if v[:require_rpcbind] == true
           it { should contain_class('rpcbind') }
         else
           it { should_not contain_class('rpcbind') }
