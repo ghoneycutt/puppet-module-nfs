@@ -5,7 +5,7 @@ describe 'nfs::idmap' do
     let :facts do
       {
         :osfamily          => 'RedHat',
-        :lsbmajdistrelease => '6',
+        :operatingsystemmajrelease => '6',
         :domain            => 'example.com',
       }
     end
@@ -56,7 +56,7 @@ describe 'nfs::idmap' do
     let :facts do
       {
         :osfamily          => 'Suse',
-        :lsbmajdistrelease => '11',
+        :operatingsystemmajrelease => '11',
         :domain            => 'example.com',
       }
     end
@@ -145,7 +145,7 @@ describe 'nfs::idmap' do
     let :facts do
       {
         :osfamily => 'RedHat',
-        :lsbmajdistrelease => '5',
+        :operatingsystemmajrelease => '5',
       }
     end
 
@@ -170,7 +170,7 @@ describe 'nfs::idmap' do
     let :facts do
       {
         :osfamily => 'RedHat',
-        :lsbmajdistrelease => '6',
+        :operatingsystemmajrelease => '6',
       }
     end
 

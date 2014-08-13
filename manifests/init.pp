@@ -23,7 +23,7 @@ class nfs (
 
       $default_nfs_package = 'nfs-common'
 
-      case $::lsbdistid {
+      case $::operatingsystem {
         'Debian': {
           $default_nfs_service = 'nfs-common'
         }
@@ -31,7 +31,7 @@ class nfs (
           $default_nfs_service = undef
         }
         default: {
-          fail("nfs module only supports lsbdistid Debian and Ubuntu of osfamily Debian. Detected lsbdistid is <${::lsbdistid}>.")
+          fail("nfs module only supports operatingsystem Debian and Ubuntu of osfamily Debian. Detected operatingsystem is <${::operatingsystem}>.")
         }
       }
     }
@@ -41,7 +41,7 @@ class nfs (
 
       $default_nfs_service = 'nfs'
 
-      case $::lsbmajdistrelease {
+      case $::operatingsystemmajrelease {
         '5': {
           $default_nfs_package = 'nfs-utils'
         }
@@ -51,7 +51,7 @@ class nfs (
           $default_nfs_package =  'nfs-utils'
         }
         default: {
-          fail("nfs module only supports EL 5 and 6 and lsbmajdistrelease was detected as <${::lsbmajdistrelease}>.")
+          fail("nfs module only supports EL 5 and 6 and operatingsystemmajrelease was detected as <${::operatingsystemmajrelease}>.")
         }
       }
     }
@@ -82,7 +82,7 @@ class nfs (
 
       include nfs::idmap
 
-      case $::lsbmajdistrelease {
+      case $::operatingsystemmajrelease {
         '10': {
           $default_nfs_package = 'nfs-utils'
           $default_nfs_service = 'nfs'
@@ -92,7 +92,7 @@ class nfs (
           $default_nfs_service = 'nfs'
         }
         default: {
-          fail("nfs module only supports Suse 10 and 11 and lsbmajdistrelease was detected as <${::lsbmajdistrelease}>.")
+          fail("nfs module only supports Suse 10 and 11 and operatingsystemrelease was detected as <${::operatingsystemrelease}>.")
         }
       }
     }
