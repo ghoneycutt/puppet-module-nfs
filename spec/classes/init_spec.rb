@@ -15,13 +15,13 @@ describe 'nfs' do
     context 'version of EL' do
       let :facts do
         { :osfamily          => 'RedHat',
-          :lsbmajdistrelease => '4',
+          :operatingsystemmajrelease => '4',
         }
       end
 
       it 'should fail' do
         expect {
-          should raise_error(Puppet::Error, /^nfs module only supports EL 5 and 6 and lsbmajdistrelease was detected as <4>./)
+          should raise_error(Puppet::Error, /^nfs module only supports EL 5 and 6 and operatingsystemmajrelease was detected as <4>./)
         }
       end
     end
@@ -29,27 +29,27 @@ describe 'nfs' do
     context 'version of Suse' do
       let :facts do
         { :osfamily          => 'Suse',
-          :lsbmajdistrelease => '9',
+          :operatingsystemmajrelease => '9',
         }
       end
 
       it 'should fail' do
         expect {
-          should raise_error(Puppet::Error, /^nfs module only supports Suse 10 and 11 and lsbmajdistrelease was detected as <9>./)
+          should raise_error(Puppet::Error, /^nfs module only supports Suse 10 and 11 and operatingsystemmajrelease was detected as <9>./)
         }
       end
     end
 
-    context 'lsbdistid of osfamily Debian' do
+    context 'operatingsystem of osfamily Debian' do
       let :facts do
         { :osfamily  => 'Debian',
-          :lsbdistid => 'unsupported',
+          :operatingsystem => 'unsupported',
         }
       end
 
       it 'should fail' do
         expect {
-          should raise_error(Puppet::Error, /^nfs module only supports lsbdistid Debian and Ubuntu of osfamily Debian. Detected lsbdistid is <unsupported>./)
+          should raise_error(Puppet::Error, /^nfs module only supports operatingsystem Debian and Ubuntu of osfamily Debian. Detected operatingsystem is <unsupported>./)
         }
       end
     end
@@ -72,7 +72,7 @@ describe 'nfs' do
   platforms = {
     'debian' =>
       { :osfamily        => 'Debian',
-        :lsbdistid       => 'Debian',
+        :operatingsystem       => 'Debian',
         :release         => '6',
         :include_idmap   => false,
         :include_rpcbind => true,
@@ -81,7 +81,7 @@ describe 'nfs' do
       },
     'ubuntu' =>
       { :osfamily        => 'Debian',
-        :lsbdistid       => 'Ubuntu',
+        :operatingsystem       => 'Ubuntu',
         :release         => '12',
         :include_idmap   => false,
         :include_rpcbind => true,
@@ -138,11 +138,11 @@ describe 'nfs' do
   }
   describe 'with default values for parameters' do
     platforms.sort.each do |k,v|
-      context "where osfamily is <#{v[:osfamily]}> lsbdistid is <#{v[:lsbdistid]}> kernelrelease is <#{v[:kernelrelease]}> and release is <#{v[:release]}>" do
+      context "where osfamily is <#{v[:osfamily]}> operatingsystem is <#{v[:operatingsystem]}> kernelrelease is <#{v[:kernelrelease]}> and release is <#{v[:release]}>" do
         let :facts do
           { :osfamily          => v[:osfamily],
-            :lsbmajdistrelease => v[:release],
-            :lsbdistid         => v[:lsbdistid],
+            :operatingsystemmajrelease => v[:release],
+            :operatingsystem         => v[:operatingsystem],
             :kernelrelease     => v[:kernelrelease],
           }
         end
@@ -213,7 +213,7 @@ describe 'nfs' do
       let(:params) { { :hiera_hash => 'not_a_boolean' } }
       let(:facts) do
         { :osfamily          => 'RedHat',
-          :lsbmajdistrelease => '6',
+          :operatingsystemmajrelease => '6',
         }
       end
 
@@ -227,7 +227,7 @@ describe 'nfs' do
         let(:params) { { :hiera_hash => value } }
         let(:facts) do
           { :osfamily          => 'RedHat',
-            :lsbmajdistrelease => '6',
+            :operatingsystemmajrelease => '6',
           }
         end
 
@@ -242,7 +242,7 @@ describe 'nfs' do
         let(:params) { { :hiera_hash => value } }
         let(:facts) do
           { :osfamily          => 'RedHat',
-            :lsbmajdistrelease => '6',
+            :operatingsystemmajrelease => '6',
           }
         end
 
@@ -256,7 +256,7 @@ describe 'nfs' do
   context 'with the mounts parameter set' do
     let :facts do
       { :osfamily          => 'RedHat',
-        :lsbmajdistrelease => '6',
+        :operatingsystemmajrelease => '6',
       }
     end
 
@@ -282,7 +282,7 @@ describe 'nfs' do
   context 'with the mounts parameter set to an incorrect type' do
     let :facts do
       { :osfamily          => 'RedHat',
-        :lsbmajdistrelease => '6',
+        :operatingsystemmajrelease => '6',
       }
     end
 
