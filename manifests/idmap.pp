@@ -8,7 +8,7 @@ class nfs::idmap (
   $idmapd_conf_owner         = 'root',
   $idmapd_conf_group         = 'root',
   $idmapd_conf_mode          = '0644',
-  $idmapd_service_name       = 'rpcidmapd',
+  $idmapd_service_name       = 'USE_DEFAULTS',
   $idmapd_service_enable     = true,
   $idmapd_service_hasstatus  = true,
   $idmapd_service_hasrestart = true,
@@ -81,8 +81,17 @@ class nfs::idmap (
 
   case $::osfamily {
     'RedHat' : {
-      $default_idmap_package    = 'nfs-utils-lib'
       $default_pipefs_directory = 'UNSET'
+      case $::lsbmajdistrelease {
+        '5','6': {
+          $default_idmap_service = 'rpcidmapd'
+          $default_idmap_package = 'nfs-utils-lib'
+        }
+        '7': {
+          $default_idmap_service = 'nfs-idmap'
+          $default_idmap_package = 'libnfsidmap'
+        }
+      }
     }
     'Suse' : {
       $default_idmap_package    = 'nfsidmap'
@@ -97,6 +106,12 @@ class nfs::idmap (
     $idmap_package_real = $default_idmap_package
   } else {
     $idmap_package_real = $idmap_package
+  }
+
+  if $idmapd_service_name == 'USE_DEFAULTS' {
+    $idmapd_service_name_real = $default_idmap_service
+  } else {
+    $idmapd_service_name_real = $idmapd_service_name
   }
 
   if $pipefs_directory == 'USE_DEFAULTS' {
@@ -127,7 +142,7 @@ class nfs::idmap (
 
     service { 'idmapd_service':
       ensure     => running,
-      name       => $idmapd_service_name,
+      name       => $idmapd_service_name_real,
       enable     => $idmapd_service_enable,
       hasstatus  => $idmapd_service_hasstatus,
       hasrestart => $idmapd_service_hasrestart,

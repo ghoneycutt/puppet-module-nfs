@@ -24,6 +24,7 @@ This module has been tested to work on the following systems with Puppet v3 and 
  * Debian 6 (client only)
  * EL 5
  * EL 6
+ * EL 7
  * Solaris 10
  * Solaris 11
  * Suse 10
