@@ -21,7 +21,7 @@ describe 'nfs' do
 
       it 'should fail' do
         expect {
-          should raise_error(Puppet::Error, /^nfs module only supports EL 5 and 6 and lsbmajdistrelease was detected as <4>./)
+          should raise_error(Puppet::Error, /^nfs module only supports EL 5, 6 and 7 and lsbmajdistrelease was detected as <4>./)
         }
       end
     end
@@ -102,6 +102,14 @@ describe 'nfs' do
         :include_rpcbind => true,
         :packages        => 'nfs-utils',
         :service         => 'nfs',
+      },
+    'el7' =>
+      { :osfamily        => 'RedHat',
+        :release         => '7',
+        :include_idmap   => true,
+        :include_rpcbind => true,
+        :packages        => 'nfs-utils',
+        :service         => nil,
       },
     'solaris10' =>
       { :osfamily        => 'Solaris',
@@ -185,6 +193,8 @@ describe 'nfs' do
                 'subscribe' => service_subscribe,
               })
             }
+          else
+            it { should_not contain_service('nfs_service') }
           end
         else
           it {
@@ -202,6 +212,8 @@ describe 'nfs' do
                 'subscribe' => "Package[#{v[:packages]}]",
               })
             }
+          else
+            it { should_not contain_service('nfs_service') }
           end
         end
       end

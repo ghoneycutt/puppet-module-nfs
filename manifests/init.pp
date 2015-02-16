@@ -37,21 +37,25 @@ class nfs (
     }
     'RedHat': {
 
-      include nfs::idmap
-
-      $default_nfs_service = 'nfs'
+      $default_nfs_package = 'nfs-utils'
 
       case $::lsbmajdistrelease {
         '5': {
-          $default_nfs_package = 'nfs-utils'
+          include nfs::idmap
+          $default_nfs_service = 'nfs'
         }
         '6': {
           include rpcbind
-
-          $default_nfs_package =  'nfs-utils'
+          include nfs::idmap
+          $default_nfs_service = 'nfs'
+        }
+        '7': {
+          include rpcbind
+          include nfs::idmap
+          $default_nfs_service = undef
         }
         default: {
-          fail("nfs module only supports EL 5 and 6 and lsbmajdistrelease was detected as <${::lsbmajdistrelease}>.")
+          fail("nfs module only supports EL 5, 6 and 7 and lsbmajdistrelease was detected as <${::lsbmajdistrelease}>.")
         }
       }
     }
@@ -81,6 +85,7 @@ class nfs (
     'Suse' : {
 
       include nfs::idmap
+      $default_idmap_service = 'rpcidmapd'
 
       case $::lsbmajdistrelease {
         '10': {
