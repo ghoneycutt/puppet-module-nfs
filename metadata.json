@@ -3,7 +3,7 @@
   "version": "1.8.0",
   "author": "ghoneycutt",
   "summary": "Manage NFS",
-  "license": "Apache License, Version 2.0",
+  "license": "Apache-2.0",
   "source": "git://github.com/ghoneycutt/puppet-module-nfs.git",
   "project_page": "https://github.com/ghoneycutt/puppet-module-nfs",
   "issues_url": "https://github.com/ghoneycutt/puppet-module-nfs/issues",
