@@ -109,7 +109,7 @@ describe 'nfs' do
         :include_idmap   => true,
         :include_rpcbind => true,
         :packages        => 'nfs-utils',
-        :service         => false,
+        :service         => nil,
       },
     'solaris10' =>
       { :osfamily        => 'Solaris',
@@ -193,6 +193,8 @@ describe 'nfs' do
                 'subscribe' => service_subscribe,
               })
             }
+          else
+            it { should_not contain_service('nfs_service') }
           end
         else
           it {
@@ -210,6 +212,8 @@ describe 'nfs' do
                 'subscribe' => "Package[#{v[:packages]}]",
               })
             }
+          else
+            it { should_not contain_service('nfs_service') }
           end
         end
       end
