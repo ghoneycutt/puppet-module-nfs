@@ -35,50 +35,32 @@ class nfs::idmap (
   }
   validate_re($verbosity, '^(\d+)$', "verbosity parameter, <${verbosity}>, does not match regex.")
 
-  $ldap_base_type = type($ldap_base)
-
-  case $ldap_base_type {
-    'String': {
+  if is_string($ldap_base) {
       $ldap_base_real = $ldap_base
-    }
-    'Array': {
+  } elsif is_array($ldap_base) {
       $ldap_base_real = inline_template('<%= ldap_base.join(\',\') %>')
-    }
-    default: {
+  } else {
       fail("valid types for ldap_base are String and Array. Detected type is <${ldap_base_type}>")
-    }
   }
 
-  $local_realms_type = type($local_realms)
-
-  case $local_realms_type {
-    'String': {
+  if is_string($local_realms) {
       $local_realms_real = $local_realms
-    }
-    'Array': {
+  } elsif is_array($local_realms) {
       $local_realms_real = inline_template('<%= local_realms.join(\',\') %>')
-    }
-    default: {
+  } else {
       fail("valid types for local_realms are String and Array. Detected type is <${local_realms_type}>")
-    }
   }
 
-  $translation_method_type = type($translation_method)
-
-  case $translation_method_type {
-    'String': {
+  if is_string($translation_method) {
       $translation_method_real = $translation_method
       validate_re($translation_method_real, '^(nsswitch|umich_ldap|static)$', "translation_method, <${translation_method}>, does not match regex.")
-    }
-    'Array': {
+  } elsif is_array($translation_method) {
       $translation_method_real = inline_template('<%= translation_method.join(\',\') %>')
       # GH: TODO: write valid regex
-    }
-    default: {
+  } else {
       fail("valid types for translation_method are String and Array. Detected type is <${translation_method_type}>")
-    }
   }
-
+ 
   case $::osfamily {
     'RedHat' : {
       $default_pipefs_directory = 'UNSET'
