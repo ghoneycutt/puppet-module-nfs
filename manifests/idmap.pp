@@ -60,7 +60,7 @@ class nfs::idmap (
   } else {
       fail("valid types for translation_method are String and Array. Detected type is <${translation_method_type}>")
   }
- 
+
   case $::osfamily {
     'RedHat' : {
       $default_pipefs_directory = 'UNSET'
