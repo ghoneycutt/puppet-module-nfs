@@ -1,6 +1,22 @@
 require 'spec_helper'
 describe 'nfs::idmap' do
 
+  context 'with default values on unsupport EL version' do
+    let :facts do
+      {
+        :osfamily          => 'RedHat',
+        :lsbmajdistrelease => '4',
+        :domain            => 'example.com',
+      }
+    end
+
+    it 'should fail' do
+      expect {
+        should contain_class('ssh')
+      }.to raise_error(Puppet::Error,/^idmap only supports EL versions 5, 6 and 7\. Detected lsbmajdistrelease is 4\./)
+    end
+  end
+
   context 'with default values on EL 6' do
     let :facts do
       {
@@ -96,7 +112,10 @@ describe 'nfs::idmap' do
 
   context 'with pipefs_directory parameter set to invalid value' do
     let :facts do
-      { :osfamily => 'RedHat' }
+      {
+        :osfamily => 'RedHat',
+        :lsbmajdistrelease => '7',
+      }
     end
 
     let :params do
@@ -112,7 +131,10 @@ describe 'nfs::idmap' do
 
   context 'with pipefs_directory parameter set to \'UNSET\'' do
     let :facts do
-      { :osfamily => 'RedHat' }
+      {
+        :osfamily => 'RedHat',
+        :lsbmajdistrelease => '7',
+      }
     end
 
     let :params do
@@ -124,7 +146,10 @@ describe 'nfs::idmap' do
 
   context 'with idmap_domain set to a valid domain, example.com' do
     let :facts do
-      { :osfamily => 'RedHat' }
+      {
+        :osfamily => 'RedHat',
+        :lsbmajdistrelease => '7',
+      }
     end
 
     let :params do
@@ -188,7 +213,10 @@ describe 'nfs::idmap' do
 
   context 'with ldap_base set to a single valid base, dc=edu' do
     let :facts do
-      { :osfamily => 'RedHat' }
+      {
+        :osfamily => 'RedHat',
+        :lsbmajdistrelease => '7',
+      }
     end
 
     let :params do
@@ -202,7 +230,10 @@ describe 'nfs::idmap' do
 
   context 'with ldap_base set to an array of valid domains, [\'dc=local\',\'dc=domain\',\'dc=edu\']' do
     let :facts do
-      { :osfamily => 'RedHat' }
+      {
+        :osfamily => 'RedHat',
+        :lsbmajdistrelease => '7',
+      }
     end
 
     let :params do
@@ -216,7 +247,10 @@ describe 'nfs::idmap' do
 
   context 'with local_realms set to a single valid domain, foo.bar' do
     let :facts do
-      { :osfamily => 'RedHat' }
+      {
+        :osfamily => 'RedHat',
+        :lsbmajdistrelease => '7',
+      }
     end
 
     let :params do
@@ -230,7 +264,10 @@ describe 'nfs::idmap' do
 
   context 'with local_realms set to an array of valid domains, [\'foo.bar\',\'bar.foo\']' do
     let :facts do
-      { :osfamily => 'RedHat' }
+      {
+        :osfamily => 'RedHat',
+        :lsbmajdistrelease => '7',
+      }
     end
 
     let :params do
@@ -244,7 +281,10 @@ describe 'nfs::idmap' do
 
   context 'with ldap_server set to a valid host, ldap.example.com' do
     let :facts do
-      { :osfamily => 'RedHat' }
+      {
+        :osfamily => 'RedHat',
+        :lsbmajdistrelease => '7',
+      }
     end
 
     let :params do
@@ -258,7 +298,10 @@ describe 'nfs::idmap' do
 
   context 'with an invalid ldap_server set' do
     let :facts do
-      { :osfamily => 'RedHat' }
+      {
+        :osfamily => 'RedHat',
+        :lsbmajdistrelease => '7',
+      }
     end
 
     let :params do
@@ -274,7 +317,10 @@ describe 'nfs::idmap' do
 
   context 'with verbosity set to a valid number, 1' do
     let :facts do
-      { :osfamily => 'RedHat' }
+      {
+        :osfamily => 'RedHat',
+        :lsbmajdistrelease => '7',
+      }
     end
 
     let :params do
@@ -288,7 +334,10 @@ describe 'nfs::idmap' do
 
   context 'with an invalid verbosity set' do
     let :facts do
-      { :osfamily => 'RedHat' }
+      {
+        :osfamily => 'RedHat',
+        :lsbmajdistrelease => '7',
+      }
     end
 
     let :params do
@@ -304,7 +353,10 @@ describe 'nfs::idmap' do
 
   context 'with translation_method set to a single valid entry, static' do
     let :facts do
-      { :osfamily => 'RedHat' }
+      {
+        :osfamily => 'RedHat',
+        :lsbmajdistrelease => '7',
+      }
     end
 
     let :params do
@@ -318,7 +370,10 @@ describe 'nfs::idmap' do
 
   context 'with translation_method set to an array of valid entries, [\'nsswitch\',\'static\']' do
     let :facts do
-      { :osfamily => 'RedHat' }
+      {
+        :osfamily => 'RedHat',
+        :lsbmajdistrelease => '7',
+      }
     end
 
     let :params do
@@ -332,7 +387,10 @@ describe 'nfs::idmap' do
 
   context 'with an invalid translation_method set as a single value' do
     let :facts do
-      { :osfamily => 'RedHat' }
+      {
+        :osfamily => 'RedHat',
+        :lsbmajdistrelease => '7',
+      }
     end
 
     let :params do
