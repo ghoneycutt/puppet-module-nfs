@@ -81,7 +81,9 @@ class nfs::idmap (
 
   case $::osfamily {
     'RedHat' : {
+
       $default_pipefs_directory = 'UNSET'
+
       case $::lsbmajdistrelease {
         '5','6': {
           $default_idmap_service = 'rpcidmapd'
@@ -90,6 +92,9 @@ class nfs::idmap (
         '7': {
           $default_idmap_service = 'nfs-idmap'
           $default_idmap_package = 'libnfsidmap'
+        }
+        default: {
+          fail("idmap only supports EL versions 5, 6 and 7. Detected lsbmajdistrelease is ${::lsbmajdistrelease}.")
         }
       }
     }
