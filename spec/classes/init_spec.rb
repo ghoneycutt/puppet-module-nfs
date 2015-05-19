@@ -14,14 +14,14 @@ describe 'nfs' do
 
     context 'version of EL' do
       let :facts do
-        { :osfamily          => 'RedHat',
-          :lsbmajdistrelease => '4',
+        { :osfamily                  => 'RedHat',
+          :operatingsystemmajrelease => '4',
         }
       end
 
       it 'should fail' do
         expect {
-          should raise_error(Puppet::Error, /^nfs module only supports EL 5, 6 and 7 and lsbmajdistrelease was detected as <4>./)
+          should raise_error(Puppet::Error, /^nfs module only supports EL 5, 6 and 7 and operatingsystemmajrelease was detected as <4>./)
         }
       end
     end
@@ -148,10 +148,11 @@ describe 'nfs' do
     platforms.sort.each do |k,v|
       context "where osfamily is <#{v[:osfamily]}> lsbdistid is <#{v[:lsbdistid]}> kernelrelease is <#{v[:kernelrelease]}> and release is <#{v[:release]}>" do
         let :facts do
-          { :osfamily          => v[:osfamily],
-            :lsbmajdistrelease => v[:release],
-            :lsbdistid         => v[:lsbdistid],
-            :kernelrelease     => v[:kernelrelease],
+          { :osfamily                  => v[:osfamily],
+            :lsbmajdistrelease         => v[:release],
+            :operatingsystemmajrelease => v[:release],
+            :lsbdistid                 => v[:lsbdistid],
+            :kernelrelease             => v[:kernelrelease],
           }
         end
 
@@ -224,8 +225,8 @@ describe 'nfs' do
     context 'as a non-boolean' do
       let(:params) { { :hiera_hash => 'not_a_boolean' } }
       let(:facts) do
-        { :osfamily          => 'RedHat',
-          :lsbmajdistrelease => '6',
+        { :osfamily                  => 'RedHat',
+          :operatingsystemmajrelease => '6',
         }
       end
 
@@ -238,8 +239,8 @@ describe 'nfs' do
       context "as #{value}" do
         let(:params) { { :hiera_hash => value } }
         let(:facts) do
-          { :osfamily          => 'RedHat',
-            :lsbmajdistrelease => '6',
+          { :osfamily                  => 'RedHat',
+            :operatingsystemmajrelease => '6',
           }
         end
 
@@ -253,8 +254,8 @@ describe 'nfs' do
       context "as #{value}" do
         let(:params) { { :hiera_hash => value } }
         let(:facts) do
-          { :osfamily          => 'RedHat',
-            :lsbmajdistrelease => '6',
+          { :osfamily                  => 'RedHat',
+            :operatingsystemmajrelease => '6',
           }
         end
 
@@ -267,8 +268,8 @@ describe 'nfs' do
 
   context 'with the mounts parameter set' do
     let :facts do
-      { :osfamily          => 'RedHat',
-        :lsbmajdistrelease => '6',
+      { :osfamily                  => 'RedHat',
+        :operatingsystemmajrelease => '6',
       }
     end
 
@@ -293,8 +294,8 @@ describe 'nfs' do
 
   context 'with the mounts parameter set to an incorrect type' do
     let :facts do
-      { :osfamily          => 'RedHat',
-        :lsbmajdistrelease => '6',
+      { :osfamily                  => 'RedHat',
+        :operatingsystemmajrelease => '6',
       }
     end
 

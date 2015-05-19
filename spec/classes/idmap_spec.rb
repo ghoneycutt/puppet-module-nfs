@@ -4,25 +4,25 @@ describe 'nfs::idmap' do
   context 'with default values on unsupport EL version' do
     let :facts do
       {
-        :osfamily          => 'RedHat',
-        :lsbmajdistrelease => '4',
-        :domain            => 'example.com',
+        :osfamily                  => 'RedHat',
+        :operatingsystemmajrelease => '4',
+        :domain                    => 'example.com',
       }
     end
 
     it 'should fail' do
       expect {
         should contain_class('ssh')
-      }.to raise_error(Puppet::Error,/^idmap only supports EL versions 5, 6 and 7\. Detected lsbmajdistrelease is 4\./)
+      }.to raise_error(Puppet::Error,/^idmap only supports EL versions 5, 6 and 7\. Detected operatingsystemmajrelease is 4\./)
     end
   end
 
   context 'with default values on EL 6' do
     let :facts do
       {
-        :osfamily          => 'RedHat',
-        :lsbmajdistrelease => '6',
-        :domain            => 'example.com',
+        :osfamily                  => 'RedHat',
+        :operatingsystemmajrelease => '6',
+        :domain                    => 'example.com',
       }
     end
 
@@ -114,7 +114,7 @@ describe 'nfs::idmap' do
     let :facts do
       {
         :osfamily => 'RedHat',
-        :lsbmajdistrelease => '7',
+        :operatingsystemmajrelease => '7',
       }
     end
 
@@ -133,7 +133,7 @@ describe 'nfs::idmap' do
     let :facts do
       {
         :osfamily => 'RedHat',
-        :lsbmajdistrelease => '7',
+        :operatingsystemmajrelease => '7',
       }
     end
 
@@ -148,7 +148,7 @@ describe 'nfs::idmap' do
     let :facts do
       {
         :osfamily => 'RedHat',
-        :lsbmajdistrelease => '7',
+        :operatingsystemmajrelease => '7',
       }
     end
 
@@ -170,7 +170,7 @@ describe 'nfs::idmap' do
     let :facts do
       {
         :osfamily => 'RedHat',
-        :lsbmajdistrelease => '5',
+        :operatingsystemmajrelease => '5',
       }
     end
 
@@ -195,7 +195,7 @@ describe 'nfs::idmap' do
     let :facts do
       {
         :osfamily => 'RedHat',
-        :lsbmajdistrelease => '6',
+        :operatingsystemmajrelease => '6',
       }
     end
 
@@ -215,7 +215,7 @@ describe 'nfs::idmap' do
     let :facts do
       {
         :osfamily => 'RedHat',
-        :lsbmajdistrelease => '7',
+        :operatingsystemmajrelease => '7',
       }
     end
 
@@ -232,7 +232,7 @@ describe 'nfs::idmap' do
     let :facts do
       {
         :osfamily => 'RedHat',
-        :lsbmajdistrelease => '7',
+        :operatingsystemmajrelease => '7',
       }
     end
 
@@ -249,7 +249,7 @@ describe 'nfs::idmap' do
     let :facts do
       {
         :osfamily => 'RedHat',
-        :lsbmajdistrelease => '7',
+        :operatingsystemmajrelease => '7',
       }
     end
 
@@ -266,7 +266,7 @@ describe 'nfs::idmap' do
     let :facts do
       {
         :osfamily => 'RedHat',
-        :lsbmajdistrelease => '7',
+        :operatingsystemmajrelease => '7',
       }
     end
 
@@ -283,7 +283,7 @@ describe 'nfs::idmap' do
     let :facts do
       {
         :osfamily => 'RedHat',
-        :lsbmajdistrelease => '7',
+        :operatingsystemmajrelease => '7',
       }
     end
 
@@ -300,7 +300,7 @@ describe 'nfs::idmap' do
     let :facts do
       {
         :osfamily => 'RedHat',
-        :lsbmajdistrelease => '7',
+        :operatingsystemmajrelease => '7',
       }
     end
 
@@ -319,7 +319,7 @@ describe 'nfs::idmap' do
     let :facts do
       {
         :osfamily => 'RedHat',
-        :lsbmajdistrelease => '7',
+        :operatingsystemmajrelease => '7',
       }
     end
 
@@ -336,7 +336,7 @@ describe 'nfs::idmap' do
     let :facts do
       {
         :osfamily => 'RedHat',
-        :lsbmajdistrelease => '7',
+        :operatingsystemmajrelease => '7',
       }
     end
 
@@ -355,7 +355,7 @@ describe 'nfs::idmap' do
     let :facts do
       {
         :osfamily => 'RedHat',
-        :lsbmajdistrelease => '7',
+        :operatingsystemmajrelease => '7',
       }
     end
 
@@ -372,7 +372,7 @@ describe 'nfs::idmap' do
     let :facts do
       {
         :osfamily => 'RedHat',
-        :lsbmajdistrelease => '7',
+        :operatingsystemmajrelease => '7',
       }
     end
 
@@ -389,7 +389,7 @@ describe 'nfs::idmap' do
     let :facts do
       {
         :osfamily => 'RedHat',
-        :lsbmajdistrelease => '7',
+        :operatingsystemmajrelease => '7',
       }
     end
 
