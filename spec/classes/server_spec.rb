@@ -4,8 +4,8 @@ describe 'nfs::server' do
   context 'with default options' do
     let :facts do
       {
-        :osfamily          => 'RedHat',
-        :lsbmajdistrelease => '6',
+        :osfamily                  => 'RedHat',
+        :operatingsystemmajrelease => '6',
       }
     end
 
@@ -49,7 +49,7 @@ describe 'nfs::server' do
     let :facts do
       {
         :osfamily => 'RedHat',
-        :lsbmajdistrelease => '5',
+        :operatingsystemmajrelease => '5',
       }
     end
 

@@ -84,7 +84,7 @@ class nfs::idmap (
 
       $default_pipefs_directory = 'UNSET'
 
-      case $::lsbmajdistrelease {
+      case $::operatingsystemmajrelease {
         '5','6': {
           $default_idmap_service = 'rpcidmapd'
           $default_idmap_package = 'nfs-utils-lib'
@@ -94,7 +94,7 @@ class nfs::idmap (
           $default_idmap_package = 'libnfsidmap'
         }
         default: {
-          fail("idmap only supports EL versions 5, 6 and 7. Detected lsbmajdistrelease is ${::lsbmajdistrelease}.")
+          fail("idmap only supports EL versions 5, 6 and 7. Detected operatingsystemmajrelease is ${::operatingsystemmajrelease}.")
         }
       }
     }
