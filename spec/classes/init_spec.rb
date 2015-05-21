@@ -7,7 +7,7 @@ describe 'nfs' do
 
       it 'should fail' do
         expect {
-          should raise_error(Puppet::Error, /^nfs module only supports osfamilies Debian, RedHat, Solaris and Suse, and <Unsupported> was detected./)
+          should raise_error(Puppet::Error, /nfs module only supports osfamilies Debian, RedHat, Solaris and Suse, and <Unsupported> was detected\./)
         }
       end
     end
@@ -21,7 +21,7 @@ describe 'nfs' do
 
       it 'should fail' do
         expect {
-          should raise_error(Puppet::Error, /^nfs module only supports EL 5, 6 and 7 and operatingsystemmajrelease was detected as <4>./)
+          should raise_error(Puppet::Error, /nfs module only supports EL 5, 6 and 7 and operatingsystemmajrelease was detected as <4>\./)
         }
       end
     end
@@ -35,7 +35,7 @@ describe 'nfs' do
 
       it 'should fail' do
         expect {
-          should raise_error(Puppet::Error, /^nfs module only supports Suse 10 and 11 and lsbmajdistrelease was detected as <9>./)
+          should raise_error(Puppet::Error, /nfs module only supports Suse 10 and 11 and lsbmajdistrelease was detected as <9>\./)
         }
       end
     end
@@ -49,7 +49,7 @@ describe 'nfs' do
 
       it 'should fail' do
         expect {
-          should raise_error(Puppet::Error, /^nfs module only supports lsbdistid Debian and Ubuntu of osfamily Debian. Detected lsbdistid is <unsupported>./)
+          should raise_error(Puppet::Error, /nfs module only supports lsbdistid Debian and Ubuntu of osfamily Debian\. Detected lsbdistid is <unsupported>\./)
         }
       end
     end
@@ -63,7 +63,7 @@ describe 'nfs' do
 
       it 'should fail' do
         expect {
-          should raise_error(Puppet::Error, /^nfs module only supports Solaris 5.10 and 5.11 and kernelrelease was detected as <5.8>./)
+          should raise_error(Puppet::Error, /nfs module only supports Solaris 5\.10 and 5\.11 and kernelrelease was detected as <5\.8>\./)
         }
       end
     end
@@ -304,9 +304,7 @@ describe 'nfs' do
     end
 
     it 'should fail' do
-      expect {
-        should raise_error(Puppet::Error)
-      }
+      expect { should raise_error(Puppet::Error) }
     end
   end
 end

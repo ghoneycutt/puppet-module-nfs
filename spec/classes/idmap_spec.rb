@@ -13,7 +13,7 @@ describe 'nfs::idmap' do
     it 'should fail' do
       expect {
         should contain_class('ssh')
-      }.to raise_error(Puppet::Error,/^idmap only supports EL versions 5, 6 and 7\. Detected operatingsystemmajrelease is 4\./)
+      }.to raise_error(Puppet::Error,/idmap only supports EL versions 5, 6 and 7\. Detected operatingsystemmajrelease is 4\./)
     end
   end
 
@@ -125,7 +125,7 @@ describe 'nfs::idmap' do
     it 'should fail' do
       expect {
         should contain_class('ssh')
-      }.to raise_error(Puppet::Error)
+      }.to raise_error(Puppet::Error,/"invalid\/path" is not an absolute path/)
     end
   end
 
@@ -310,7 +310,7 @@ describe 'nfs::idmap' do
 
     it 'should fail' do
       expect {
-        should raise_error(Puppet::Error, /nfs::idmap::ldap_server parameter, <invalid>, is not a valid name./)
+        should raise_error(Puppet::Error, /nfs::idmap::ldap_server parameter, <invalid>, is not a valid name\./)
       }
     end
   end
@@ -346,7 +346,7 @@ describe 'nfs::idmap' do
 
     it 'should fail' do
       expect {
-        should raise_error(Puppet::Error, /verbosity parameter, <invalid>, does not match regex./)
+        should raise_error(Puppet::Error, /verbosity parameter, <invalid>, does not match regex\./)
       }
     end
   end
@@ -399,7 +399,7 @@ describe 'nfs::idmap' do
 
     it 'should fail' do
       expect {
-        should raise_error(Puppet::Error, /translation_method parameter, <invalid>, does not match regex. Valid values include nsswitch, umich_ldap, and static./)
+        should raise_error(Puppet::Error, /translation_method parameter, <invalid>, does not match regex\. Valid values include nsswitch, umich_ldap, and static\./)
       }
     end
   end
@@ -416,7 +416,7 @@ describe 'nfs::idmap' do
 #
 #    it 'should fail' do
 #      expect {
-#        should raise_error(Puppet::Error, /translation_method parameter, <nsswitchinvalidumich_ldap>, does not match regex. Valid values include nsswitch, umich_ldap, and static./)
+#        should raise_error(Puppet::Error, /translation_method parameter, <nsswitchinvalidumich_ldap>, does not match regex\. Valid values include nsswitch, umich_ldap, and static\./)
 #      }
 #    end
 #  end
