@@ -35,35 +35,35 @@ class nfs::idmap (
   }
   validate_re($verbosity, '^(\d+)$', "verbosity parameter, <${verbosity}>, does not match regex.")
 
-  $ldap_base_type = type($ldap_base)
+  $ldap_base_type = type3x($ldap_base)
 
   case $ldap_base_type {
     'String': {
       $ldap_base_real = $ldap_base
     }
     'Array': {
-      $ldap_base_real = inline_template('<%= ldap_base.join(\',\') %>')
+      $ldap_base_real = inline_template('<%= @ldap_base.join(\',\') %>')
     }
     default: {
       fail("valid types for ldap_base are String and Array. Detected type is <${ldap_base_type}>")
     }
   }
 
-  $local_realms_type = type($local_realms)
+  $local_realms_type = type3x($local_realms)
 
   case $local_realms_type {
     'String': {
       $local_realms_real = $local_realms
     }
     'Array': {
-      $local_realms_real = inline_template('<%= local_realms.join(\',\') %>')
+      $local_realms_real = inline_template('<%= @local_realms.join(\',\') %>')
     }
     default: {
       fail("valid types for local_realms are String and Array. Detected type is <${local_realms_type}>")
     }
   }
 
-  $translation_method_type = type($translation_method)
+  $translation_method_type = type3x($translation_method)
 
   case $translation_method_type {
     'String': {
@@ -71,7 +71,7 @@ class nfs::idmap (
       validate_re($translation_method_real, '^(nsswitch|umich_ldap|static)$', "translation_method, <${translation_method}>, does not match regex.")
     }
     'Array': {
-      $translation_method_real = inline_template('<%= translation_method.join(\',\') %>')
+      $translation_method_real = inline_template('<%= @translation_method.join(\',\') %>')
       # GH: TODO: write valid regex
     }
     default: {

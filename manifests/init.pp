@@ -9,7 +9,7 @@ class nfs (
   $mounts      = undef,
 ) {
 
-  if type($hiera_hash) == 'string' {
+  if type3x($hiera_hash) == 'string' {
     $hiera_hash_real = str2bool($hiera_hash)
   } else {
     $hiera_hash_real = $hiera_hash

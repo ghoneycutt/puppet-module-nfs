@@ -25,7 +25,7 @@ class nfs::server (
     refreshonly => true,
   }
 
-  Service ['nfs_service'] {
+  Service['nfs_service'] {
     ensure     => running,
     enable     => true,
     hasstatus  => true,
