@@ -24,6 +24,8 @@ class nfs::idmap (
   $pipefs_directory          = 'USE_DEFAULTS',
 ) {
 
+  require ::nfs
+
   $is_idmap_domain_valid = is_domain_name($idmap_domain)
   if $is_idmap_domain_valid != true {
     fail("nfs::idmap::idmap_domain parameter, <${idmap_domain}>, is not a valid name.")
