@@ -92,6 +92,7 @@ class nfs::idmap (
         '7': {
           $default_idmap_service = 'nfs-idmap'
           $default_idmap_package = 'libnfsidmap'
+          $idmapd_service_enable = false
         }
         default: {
           fail("idmap only supports EL versions 5, 6 and 7. Detected operatingsystemmajrelease is ${::operatingsystemmajrelease}.")
