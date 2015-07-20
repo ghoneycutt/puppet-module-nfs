@@ -88,11 +88,12 @@ class nfs::idmap (
         '5','6': {
           $default_idmap_service = 'rpcidmapd'
           $default_idmap_package = 'nfs-utils-lib'
+          $idmapd_service_enable_temp = $idmapd_service_enable
         }
         '7': {
           $default_idmap_service = 'nfs-idmap'
           $default_idmap_package = 'libnfsidmap'
-          $idmapd_service_enable = false
+          $idmapd_service_enable_temp = false
         }
         default: {
           fail("idmap only supports EL versions 5, 6 and 7. Detected operatingsystemmajrelease is ${::operatingsystemmajrelease}.")
@@ -149,7 +150,7 @@ class nfs::idmap (
     service { 'idmapd_service':
       ensure     => running,
       name       => $idmapd_service_name_real,
-      enable     => $idmapd_service_enable,
+      enable     => $idmapd_service_enable_temp,
       hasstatus  => $idmapd_service_hasstatus,
       hasrestart => $idmapd_service_hasrestart,
       subscribe  => File['idmapd_conf'],
