@@ -131,7 +131,6 @@ class nfs::idmap (
 
   package { $idmap_package_real:
     ensure => present,
-    require => { defined($nfs::nfs_package_real) ? Package[$nfs::nfs_package_real] : undef }
   }
 
   file { 'idmapd_conf':
@@ -148,7 +147,7 @@ class nfs::idmap (
 
     # On Redhat/EL 7.1+, the command 'systemctl enable nfs-idmap' fails per
     # https://bugzilla.redhat.com/show_bug.cgi?id=1159308
-    if versioncmp($::operatingsystemrelease, '7.0') > 0  && versioncmp($::operatingsystemrelease, '8.0') < 0 {
+    if versioncmp($::operatingsystemrelease, '7.0') > 0 and versioncmp($::operatingsystemrelease, '8.0') < 0 {
       $idmapd_service_enable_real = false
     }
     else {
