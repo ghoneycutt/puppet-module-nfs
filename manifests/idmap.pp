@@ -88,12 +88,10 @@ class nfs::idmap (
         '5','6': {
           $default_idmap_service = 'rpcidmapd'
           $default_idmap_package = 'nfs-utils-lib'
-          $idmapd_service_enable_temp = $idmapd_service_enable
         }
         '7': {
           $default_idmap_service = 'nfs-idmap'
           $default_idmap_package = 'libnfsidmap'
-          $idmapd_service_enable_temp = false
         }
         default: {
           fail("idmap only supports EL versions 5, 6 and 7. Detected operatingsystemmajrelease is ${::operatingsystemmajrelease}.")
@@ -133,6 +131,7 @@ class nfs::idmap (
 
   package { $idmap_package_real:
     ensure => present,
+    require => { defined($nfs::nfs_package_real) ? Package[$nfs::nfs_package_real] : undef }
   }
 
   file { 'idmapd_conf':
@@ -147,13 +146,22 @@ class nfs::idmap (
 
   if $::osfamily == 'RedHat' {
 
+    # On Redhat/EL 7.1+, the command 'systemctl enable nfs-idmap' fails per
+    # https://bugzilla.redhat.com/show_bug.cgi?id=1159308
+    if versioncmp($::operatingsystemrelease, '7.0') > 0  && versioncmp($::operatingsystemrelease, '8.0') < 0 {
+      $idmapd_service_enable_real = false
+    }
+    else {
+      $idmapd_service_enable_real = $idmapd_service_enable
+    }
+      
     service { 'idmapd_service':
       ensure     => running,
       name       => $idmapd_service_name_real,
-      enable     => $idmapd_service_enable_temp,
+      enable     => $idmapd_service_enable_real,
       hasstatus  => $idmapd_service_hasstatus,
       hasrestart => $idmapd_service_hasrestart,
-      subscribe  => File['idmapd_conf'],
+      subscribe  => File['idmapd_conf']
     }
   }
 }
