@@ -160,7 +160,7 @@ class nfs::idmap (
       enable     => $idmapd_service_enable_real,
       hasstatus  => $idmapd_service_hasstatus,
       hasrestart => $idmapd_service_hasrestart,
-      require => Package[$idmap_package_real],
+      require    => Package[$idmap_package_real],
       subscribe  => File['idmapd_conf']
     }
   }
