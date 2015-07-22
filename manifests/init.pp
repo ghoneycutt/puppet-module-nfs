@@ -122,7 +122,7 @@ class nfs (
   package { $nfs_package_real:
     ensure => present,
     before => $::osfamily ? {
-      'Redhat' => Class['Nfs::Idmap'],
+      'RedHat' => Class['Nfs::Idmap'],
       default => undef,
     }
   }
