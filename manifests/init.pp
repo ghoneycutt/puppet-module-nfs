@@ -121,7 +121,10 @@ class nfs (
 
   package { $nfs_package_real:
     ensure => present,
-    before => Class['Nfs::Idmap']
+    before => $::osfamily ? {
+      'Redhat' => Class['Nfs::Idmap'],
+      default => undef,
+    }
   }
 
   if $nfs_service_real {
