@@ -31,6 +31,7 @@ This module has been tested to work on the following systems with Puppet v3
  * Solaris 11
  * Suse 10
  * Suse 11
+ * Suse 12
  * Ubuntu 12.04 LTS
 
 ===

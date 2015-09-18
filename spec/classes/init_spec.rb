@@ -35,7 +35,7 @@ describe 'nfs' do
 
       it 'should fail' do
         expect {
-          should raise_error(Puppet::Error, /nfs module only supports Suse 10 and 11 and lsbmajdistrelease was detected as <9>\./)
+          should raise_error(Puppet::Error, /nfs module only supports Suse 10, 11 and 12 and lsbmajdistrelease was detected as <9>\./)
         }
       end
     end
@@ -138,6 +138,14 @@ describe 'nfs' do
     'suse11' =>
       { :osfamily        => 'Suse',
         :release         => '11',
+        :include_idmap   => true,
+        :include_rpcbind => false,
+        :packages        => 'nfs-client',
+        :service         => 'nfs',
+      },
+    'suse12' =>
+      { :osfamily        => 'Suse',
+        :release         => '12',
         :include_idmap   => true,
         :include_rpcbind => false,
         :packages        => 'nfs-client',
