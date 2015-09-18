@@ -92,12 +92,12 @@ class nfs (
           $default_nfs_package = 'nfs-utils'
           $default_nfs_service = 'nfs'
         }
-        '11': {
+        '11','12': {
           $default_nfs_package = 'nfs-client'
           $default_nfs_service = 'nfs'
         }
         default: {
-          fail("nfs module only supports Suse 10 and 11 and lsbmajdistrelease was detected as <${::lsbmajdistrelease}>.")
+          fail("nfs module only supports Suse 10, 11 and 12 and lsbmajdistrelease was detected as <${::lsbmajdistrelease}>.")
         }
       }
     }
