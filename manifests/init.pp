@@ -19,7 +19,7 @@ class nfs (
   case $::osfamily {
     'Debian': {
 
-      include rpcbind
+      include ::rpcbind
 
       $default_nfs_package = 'nfs-common'
 
@@ -41,17 +41,17 @@ class nfs (
 
       case $::operatingsystemmajrelease {
         '5': {
-          include nfs::idmap
+          include ::nfs::idmap
           $default_nfs_service = 'nfs'
         }
         '6': {
-          include rpcbind
-          include nfs::idmap
+          include ::rpcbind
+          include ::nfs::idmap
           $default_nfs_service = 'nfs'
         }
         '7': {
-          include rpcbind
-          include nfs::idmap
+          include ::rpcbind
+          include ::nfs::idmap
           $default_nfs_service = undef
         }
         default: {
@@ -84,7 +84,7 @@ class nfs (
     }
     'Suse' : {
 
-      include nfs::idmap
+      include ::nfs::idmap
       $default_idmap_service = 'rpcidmapd'
 
       case $::lsbmajdistrelease {
