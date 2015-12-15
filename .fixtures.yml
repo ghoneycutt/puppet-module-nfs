@@ -2,7 +2,7 @@ fixtures:
   repositories:
     common:
       repo: 'https://github.com/ghoneycutt/puppet-module-common.git'
-      ref: 'v1.3.0'
+      ref: 'v1.4.1'
     rpcbind:
       repo: 'https://github.com/ghoneycutt/puppet-module-rpcbind.git'
       ref: 'v1.0.0'
