@@ -29,6 +29,7 @@ This module has been tested to work on the following systems with Puppet v3
  * EL 7
  * Solaris 10
  * Solaris 11
+ * OmniOS r151016
  * Suse 10
  * Suse 11
  * Suse 12
@@ -53,6 +54,12 @@ Name of the NFS package
 nfs_service
 -----------
 Name of the NFS service
+
+- *Default*: Uses system defaults as specified in module
+
+nfs_service_required_svcs
+-----------
+Array of services to enable prior to enabling NFS service.
 
 - *Default*: Uses system defaults as specified in module
 
