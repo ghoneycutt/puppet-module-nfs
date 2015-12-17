@@ -34,6 +34,7 @@ class nfs (
           fail("nfs module only supports lsbdistid Debian and Ubuntu of osfamily Debian. Detected lsbdistid is <${::lsbdistid}>.")
         }
       }
+      $default_nfs_service_required_svcs = undef
     }
     'RedHat': {
 
@@ -58,28 +59,33 @@ class nfs (
           fail("nfs module only supports EL 5, 6 and 7 and operatingsystemmajrelease was detected as <${::operatingsystemmajrelease}>.")
         }
       }
+      $default_nfs_service_required_svcs = undef
     }
     'Solaris': {
       case $::kernelrelease {
         '5.10': {
           $default_nfs_package = [ 'SUNWnfsckr',
-                                    'SUNWnfscr',
-                                    'SUNWnfscu',
-                                    'SUNWnfsskr',
-                                    'SUNWnfssr',
-                                    'SUNWnfssu',
+                                   'SUNWnfscr',
+                                   'SUNWnfscu',
+                                   'SUNWnfsskr',
+                                   'SUNWnfssr',
+                                   'SUNWnfssu',
           ]
+          $default_nfs_service_required_svcs = undef
         }
         '5.11': {
           $default_nfs_package = [ 'service/file-system/nfs',
-                                    'system/file-system/nfs',
+                                   'system/file-system/nfs',
+          ]
+
+          $default_nfs_service_required_svcs = [ 'nfs/status',
+                                                 'nfs/nlockmgr',
           ]
         }
         default: {
           fail("nfs module only supports Solaris 5.10 and 5.11 and kernelrelease was detected as <${::kernelrelease}>.")
         }
       }
-
       $default_nfs_service = 'nfs/client'
     }
     'Suse' : {
@@ -100,6 +106,7 @@ class nfs (
           fail("nfs module only supports Suse 10, 11 and 12 and lsbmajdistrelease was detected as <${::lsbmajdistrelease}>.")
         }
       }
+      $default_nfs_service_required_svcs = undef
     }
 
     default: {
@@ -115,14 +122,24 @@ class nfs (
 
   if $nfs_service == 'USE_DEFAULTS' {
     $nfs_service_real = $default_nfs_service
+    $nfs_service_required_svcs_real = $default_nfs_service_required_svcs
   } else {
     $nfs_service_real = $nfs_service
+    $nfs_service_required_svcs_real = undef
   }
 
   package { $nfs_package_real:
     ensure => present,
   }
 
+  if $nfs_service_required_svcs_real and $nfs_service_real {
+   service { $nfs_service_required_svcs_real:
+      ensure    => running,
+      enable    => true,
+      subscribe => Package[$nfs_package_real],
+      before    => Service['nfs_service'],
+   }
+  }
   if $nfs_service_real {
     service { 'nfs_service':
       ensure    => running,
