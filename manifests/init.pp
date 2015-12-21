@@ -141,12 +141,12 @@ class nfs (
   }
 
   if $nfs_service_required_svcs_real != undef and $nfs_service_real != undef {
-   service { $nfs_service_required_svcs_real:
+    service { $nfs_service_required_svcs_real:
       ensure    => running,
       enable    => true,
       subscribe => Package[$nfs_package_real],
       before    => Service['nfs_service'],
-   }
+    }
   }
   if $nfs_service_real != undef {
     service { 'nfs_service':
