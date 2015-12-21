@@ -47,7 +47,7 @@ Boolean to use hiera_hash which merges all found instances of nfs::mounts in Hie
 
 nfs_package
 -----------
-Name of the NFS package
+Array or string for name of the NFS package
 
 - *Default*: Uses system defaults as specified in module
 
@@ -67,7 +67,7 @@ mounts
 ------
 Hash of mounts to be mounted on system. See below.
 
-- *Default*: undef
+- *Default*: {}
 
 ===
 

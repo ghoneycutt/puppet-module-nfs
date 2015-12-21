@@ -126,6 +126,7 @@ describe 'nfs' do
         :include_rpcbind => false,
         :packages        => ['service/file-system/nfs','system/file-system/nfs'],
         :service         => 'nfs/client',
+        :required_svcs   => ['nfs/nlockmgr', 'nfs/status'],
       },
     'suse10' =>
       { :osfamily        => 'Suse',
@@ -205,6 +206,19 @@ describe 'nfs' do
           else
             it { should_not contain_service('nfs_service') }
           end
+
+          if v[:required_svcs]
+            v[:required_svcs].each do |r_svc|
+              it {
+                should contain_service(r_svc).with({
+                  'ensure'    => 'running',
+                  'enable'    => true,
+                  'subscribe' => service_subscribe,
+                  'before'    => 'Service[nfs_service]',
+                })
+              }
+            end
+          end
         else
           it {
             should contain_package(v[:packages]).with({
@@ -229,52 +243,7 @@ describe 'nfs' do
     end
   end
 
-  describe 'with hiera_hash parameter specified' do
-    context 'as a non-boolean' do
-      let(:params) { { :hiera_hash => 'not_a_boolean' } }
-      let(:facts) do
-        { :osfamily                  => 'RedHat',
-          :operatingsystemmajrelease => '6',
-        }
-      end
-
-      it 'should fail' do
-        expect { should raise_error(Puppet::Error) }
-      end
-    end
-
-    ['true',true].each do |value|
-      context "as #{value}" do
-        let(:params) { { :hiera_hash => value } }
-        let(:facts) do
-          { :osfamily                  => 'RedHat',
-            :operatingsystemmajrelease => '6',
-          }
-        end
-
-        it { should compile.with_all_deps }
-
-        it { should contain_class('nfs') }
-      end
-    end
-
-    ['false',false].each do |value|
-      context "as #{value}" do
-        let(:params) { { :hiera_hash => value } }
-        let(:facts) do
-          { :osfamily                  => 'RedHat',
-            :operatingsystemmajrelease => '6',
-          }
-        end
-
-        it { should compile.with_all_deps }
-
-        it { should contain_class('nfs') }
-      end
-    end
-  end
-
-  context 'with the mounts parameter set' do
+  describe 'with the mounts parameter set' do
     let :facts do
       { :osfamily                  => 'RedHat',
         :operatingsystemmajrelease => '6',
@@ -300,19 +269,67 @@ describe 'nfs' do
     }
   end
 
-  context 'with the mounts parameter set to an incorrect type' do
-    let :facts do
-      { :osfamily                  => 'RedHat',
+  describe 'variable type and content validations' do
+    # set needed custom facts and variables
+    let(:facts) do
+      {
+        :osfamily                  => 'RedHat',
         :operatingsystemmajrelease => '6',
       }
     end
+    let(:validation_params) { {
+#      :param => 'value',
+    } }
 
-    let :params do
-      { :mounts => 'i should be a hash' }
-    end
+    validations = {
+      'hash' => {
+        :name    => %w(mounts),
+        :valid   => [{ 'ha' => 'sh' }],
+        :invalid => [['array'],3, 2.42, true, 'string'],
+        :message => 'is not a Hash',
+      },
+      'array_or_string' => {
+        :name    => %w(nfs_package nfs_service),
+        :valid   => [%w(ar ray), 'string'],
+        :invalid => [{ 'ha' => 'sh' }, 3, 2.42, true],
+        :message => 'is not a string nor an array',
+      },
+      'array' => {
+        :name    => %w(nfs_service_required_svcs),
+        :valid   => [%w(ar ray)],
+        :invalid => [{ 'ha' => 'sh' }, 3, 2.42, true, 'string'],
+        :message => 'is not an Array',
+      },
+      'bool_stringified' => {
+        :name    => %w(hiera_hash),
+        :valid   => [true, false, 'true', 'false'],
+        :invalid => ['invalid', %w(array), { 'ha' => 'sh' }, 3, 2.42],
+        :message => 'boolean',
+      },
+    }
 
-    it 'should fail' do
-      expect { should raise_error(Puppet::Error) }
-    end
-  end
+    validations.sort.each do |type,var|
+      var[:name].each do |var_name|
+
+        var[:valid].each do |valid|
+          context "with #{var_name} (#{type}) set to valid #{valid} (as #{valid.class})" do
+            let(:params) { validation_params.merge({:"#{var_name}" => valid, }) }
+            it { should compile }
+          end
+        end
+
+        var[:invalid].each do |invalid|
+          context "with #{var_name} (#{type}) set to invalid #{invalid} (as #{invalid.class})" do
+            let(:params) { validation_params.merge({:"#{var_name}" => invalid, }) }
+            it 'should fail' do
+              expect {
+                should contain_class(subject)
+              }.to raise_error(Puppet::Error,/#{var[:message]}/)
+            end
+          end
+        end
+
+      end # var[:name].each
+    end # validations.sort.each
+  end # describe 'variable type and content validations'
 end

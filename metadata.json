@@ -41,6 +41,12 @@
       ]
     },
     {
+      "operatingsystem": "OmniOS",
+      "operatingsystemrelease": [
+        "11"
+      ]
+    },
+    {
       "operatingsystem": "OracleLinux",
       "operatingsystemrelease": [
         "5",
