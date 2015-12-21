@@ -3,10 +3,11 @@
 # Manages NFS
 #
 class nfs (
-  $hiera_hash  = false,
-  $nfs_package = 'USE_DEFAULTS',
-  $nfs_service = 'USE_DEFAULTS',
-  $mounts      = undef,
+  $hiera_hash                = false,
+  $nfs_package               = 'USE_DEFAULTS',
+  $nfs_service               = 'USE_DEFAULTS',
+  $nfs_service_required_svcs = 'USE_DEFAULTS',
+  $mounts                    = undef,
 ) {
 
   if type3x($hiera_hash) == 'string' {
@@ -64,22 +65,25 @@ class nfs (
     'Solaris': {
       case $::kernelrelease {
         '5.10': {
-          $default_nfs_package = [ 'SUNWnfsckr',
-                                   'SUNWnfscr',
-                                   'SUNWnfscu',
-                                   'SUNWnfsskr',
-                                   'SUNWnfssr',
-                                   'SUNWnfssu',
+          $default_nfs_package = [
+            'SUNWnfsckr',
+            'SUNWnfscr',
+            'SUNWnfscu',
+            'SUNWnfsskr',
+            'SUNWnfssr',
+            'SUNWnfssu',
           ]
           $default_nfs_service_required_svcs = undef
         }
         '5.11': {
-          $default_nfs_package = [ 'service/file-system/nfs',
-                                   'system/file-system/nfs',
+          $default_nfs_package = [
+            'service/file-system/nfs',
+            'system/file-system/nfs',
           ]
 
-          $default_nfs_service_required_svcs = [ 'nfs/status',
-                                                 'nfs/nlockmgr',
+          $default_nfs_service_required_svcs = [
+            'nfs/status',
+            'nfs/nlockmgr',
           ]
         }
         default: {
@@ -122,10 +126,14 @@ class nfs (
 
   if $nfs_service == 'USE_DEFAULTS' {
     $nfs_service_real = $default_nfs_service
-    $nfs_service_required_svcs_real = $default_nfs_service_required_svcs
   } else {
     $nfs_service_real = $nfs_service
-    $nfs_service_required_svcs_real = undef
+  }
+
+  if $nfs_service_required_svcs == 'USE_DEFAULTS' {
+    $nfs_service_required_svcs_real = $default_nfs_service_required_svcs
+  } else {
+    $nfs_service_required_svcs_real = $nfs_service_required_svcs
   }
 
   $nfs_package_before = $::osfamily ? {
@@ -137,7 +145,7 @@ class nfs (
     before => $nfs_package_before,
   }
 
-  if $nfs_service_required_svcs_real and $nfs_service_real {
+  if $nfs_service_required_svcs_real != undef and $nfs_service_real != undef {
    service { $nfs_service_required_svcs_real:
       ensure    => running,
       enable    => true,
@@ -145,7 +153,7 @@ class nfs (
       before    => Service['nfs_service'],
    }
   }
-  if $nfs_service_real {
+  if $nfs_service_real != undef {
     service { 'nfs_service':
       ensure    => running,
       name      => $nfs_service_real,
