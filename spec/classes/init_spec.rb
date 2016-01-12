@@ -109,7 +109,7 @@ describe 'nfs' do
         :include_idmap   => true,
         :include_rpcbind => true,
         :packages        => 'nfs-utils',
-        :service         => nil,
+        :service         => 'nfs-server',
       },
     'solaris10' =>
       { :osfamily        => 'Solaris',
