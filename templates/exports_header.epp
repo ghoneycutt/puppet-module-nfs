@@ -1,6 +1,0 @@
-### <%= $message %>
-
-# exports <path> <host>(<settings> this should all be provided in a hiera hash
-#
-
-
