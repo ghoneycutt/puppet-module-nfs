@@ -99,6 +99,7 @@ class nfs::idmap (
       }
     }
     'Suse' : {
+      $default_idmap_service    = undef
       $default_idmap_package    = 'nfsidmap'
       $default_pipefs_directory = '/var/lib/nfs/rpc_pipefs'
     }
