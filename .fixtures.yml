@@ -2,7 +2,7 @@ fixtures:
   repositories:
     common:
       repo: 'https://github.com/ghoneycutt/puppet-module-common.git'
-      ref: 'v1.4.1'
+      ref: 'v1.7.0'
     rpcbind:
       repo: 'https://github.com/ghoneycutt/puppet-module-rpcbind.git'
       ref: 'v1.0.0'
@@ -11,6 +11,6 @@ fixtures:
       ref: '4.6.0'
     types:
       repo: 'https://github.com/ghoneycutt/puppet-module-types.git'
-      ref: 'v1.1.0'
+      ref: 'v1.11.0'
   symlinks:
     nfs: "#{source_dir}"
