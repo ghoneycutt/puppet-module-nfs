@@ -21,11 +21,14 @@ doc/
 # Vim
 *.swp
 
+# Eclipse
+.project
+
 # OS X
 .DS_Store
 
 # Puppet
 coverage/
-spec/fixtures/modules/*
 spec/fixtures/manifests/*
+spec/fixtures/modules/*
 Gemfile.lock
