@@ -7,16 +7,27 @@ class nfs::server (
   $exports_owner  = 'root',
   $exports_group  = 'root',
   $exports_mode   = '0644',
+  $exports_data   = '',
+  $ensure         = 'present',
 ) inherits nfs {
-
-  # GH: TODO - use file fragment pattern
-  file { 'nfs_exports':
-    ensure => file,
-    path   => $exports_path,
-    owner  => $exports_owner,
-    group  => $exports_group,
-    mode   => $exports_mode,
-    notify => Exec['update_nfs_exports'],
+  $exports_gen = hiera_hash('exports_data',{})
+  if !empty($exports_gen) {
+    concat { "$exports_path":
+      ensure  => "$ensure",
+      path    => "$exports_path",
+      owner   => "$exports_owner",
+      group   => "$exports_group",
+      mode    => "$exports_mode",
+      order   => 'numeric',
+    }
+    # template vars:
+      # * message
+    concat::fragment { "${exports_path}-general}":
+      target  => "$exports_path",
+      order   => 0,
+      content => template("${module_name}/exports_header.erb"),
+    }
+    create_resources('nfs::exports_data', $exports_gen)
   }
 
   exec { 'update_nfs_exports':
@@ -33,3 +44,4 @@ class nfs::server (
     require    => File['nfs_exports'],
   }
 }
+
