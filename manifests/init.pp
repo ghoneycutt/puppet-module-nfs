@@ -3,10 +3,11 @@
 # Manages NFS
 #
 class nfs (
-  $hiera_hash  = false,
-  $nfs_package = 'USE_DEFAULTS',
-  $nfs_service = 'USE_DEFAULTS',
-  $mounts      = undef,
+  $hiera_hash                = false,
+  $nfs_package               = 'USE_DEFAULTS',
+  $nfs_service               = 'USE_DEFAULTS',
+  $nfs_service_required_svcs = 'USE_DEFAULTS',
+  $mounts                    = {},
 ) {
 
   if type3x($hiera_hash) == 'string' {
@@ -22,6 +23,7 @@ class nfs (
       include ::rpcbind
 
       $default_nfs_package = 'nfs-common'
+      $default_nfs_service_required_svcs = undef
 
       case $::lsbdistid {
         'Debian': {
@@ -38,6 +40,7 @@ class nfs (
     'RedHat': {
 
       $default_nfs_package = 'nfs-utils'
+      $default_nfs_service_required_svcs = undef
 
       case $::operatingsystemmajrelease {
         '5': {
@@ -60,32 +63,44 @@ class nfs (
       }
     }
     'Solaris': {
+
+      $default_nfs_service = 'nfs/client'
+
       case $::kernelrelease {
         '5.10': {
-          $default_nfs_package = [ 'SUNWnfsckr',
-                                    'SUNWnfscr',
-                                    'SUNWnfscu',
-                                    'SUNWnfsskr',
-                                    'SUNWnfssr',
-                                    'SUNWnfssu',
+          $default_nfs_package = [
+            'SUNWnfsckr',
+            'SUNWnfscr',
+            'SUNWnfscu',
+            'SUNWnfsskr',
+            'SUNWnfssr',
+            'SUNWnfssu',
           ]
+
+          $default_nfs_service_required_svcs = undef
         }
         '5.11': {
-          $default_nfs_package = [ 'service/file-system/nfs',
-                                    'system/file-system/nfs',
+          $default_nfs_package = [
+            'service/file-system/nfs',
+            'system/file-system/nfs',
+          ]
+
+          $default_nfs_service_required_svcs = [
+            'nfs/status',
+            'nfs/nlockmgr',
           ]
         }
         default: {
           fail("nfs module only supports Solaris 5.10 and 5.11 and kernelrelease was detected as <${::kernelrelease}>.")
         }
       }
-
-      $default_nfs_service = 'nfs/client'
     }
     'Suse' : {
 
       include ::nfs::idmap
+
       $default_idmap_service = 'rpcidmapd'
+      $default_nfs_service_required_svcs = undef
 
       case $::lsbmajdistrelease {
         '10': {
@@ -113,26 +128,56 @@ class nfs (
     $nfs_package_real = $nfs_package
   }
 
+  # nfs_package_real is either an array or a string
+  if is_string($nfs_package_real) == false and is_array($nfs_package_real) == false {
+    fail("nfs::nfs_package is <${nfs_package_real}> and is not a string nor an array.")
+  }
+
   if $nfs_service == 'USE_DEFAULTS' {
     $nfs_service_real = $default_nfs_service
   } else {
     $nfs_service_real = $nfs_service
   }
 
+  # nfs_service_real is either an array or a string
+  if is_string($nfs_service_real) == false and is_array($nfs_service_real) == false {
+    fail("nfs::nfs_service is <${nfs_service_real}> and is not a string nor an array.")
+  }
+
+  if $nfs_service_required_svcs == 'USE_DEFAULTS' {
+    $nfs_service_required_svcs_real = $default_nfs_service_required_svcs
+  } else {
+    $nfs_service_required_svcs_real = $nfs_service_required_svcs
+  }
+
   package { $nfs_package_real:
     ensure => present,
   }
 
-  if $nfs_service_real {
+  if $nfs_service_real != undef {
+
     service { 'nfs_service':
       ensure    => running,
       name      => $nfs_service_real,
       enable    => true,
       subscribe => Package[$nfs_package_real],
     }
+
+    if $nfs_service_required_svcs_real != undef {
+
+      validate_array($nfs_service_required_svcs_real)
+
+      service { $nfs_service_required_svcs_real:
+        ensure    => running,
+        enable    => true,
+        subscribe => Package[$nfs_package_real],
+        before    => Service['nfs_service'],
+      }
+    }
   }
 
-  if $mounts != undef {
+  validate_hash($mounts)
+  if empty($mounts) == false {
 
     if $hiera_hash_real == true {
       $mounts_real = hiera_hash('nfs::mounts')
@@ -141,7 +186,6 @@ class nfs (
       notice('Future versions of the nfs module will default nfs::hiera_hash to true')
     }
 
-    validate_hash($mounts_real)
     create_resources('types::mount',$mounts_real)
   }
 }

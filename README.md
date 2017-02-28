@@ -29,6 +29,7 @@ This module has been tested to work on the following systems with Puppet v3
  * EL 7
  * Solaris 10
  * Solaris 11
+ * OmniOS r151016
  * Suse 10
  * Suse 11
  * Suse 12
@@ -46,7 +47,7 @@ Boolean to use hiera_hash which merges all found instances of nfs::mounts in Hie
 
 nfs_package
 -----------
-Name of the NFS package
+Array or string for name of the NFS package
 
 - *Default*: Uses system defaults as specified in module
 
@@ -56,11 +57,17 @@ Name of the NFS service
 
 - *Default*: Uses system defaults as specified in module
 
+nfs_service_required_svcs
+-----------
+Array of services to enable prior to enabling NFS service.
+
+- *Default*: Uses system defaults as specified in module
+
 mounts
 ------
 Hash of mounts to be mounted on system. See below.
 
-- *Default*: undef
+- *Default*: {}
 
 ===
 
