@@ -50,6 +50,12 @@ Name of the NFS package
 
 - *Default*: Uses system defaults as specified in module
 
+nfs_package_provider
+-----------
+Name of the NFS package provider
+
+- *Default*: Uses system defaults as specified in module
+
 nfs_service
 -----------
 Name of the NFS service

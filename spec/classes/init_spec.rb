@@ -118,6 +118,16 @@ describe 'nfs' do
         :include_rpcbind => false,
         :packages        => ['SUNWnfsckr','SUNWnfscr','SUNWnfscu','SUNWnfsskr','SUNWnfssr','SUNWnfssu'],
         :service         => 'nfs/client',
+        :provider        => 'sun',
+      },
+    'solaris11' =>
+      { :osfamily        => 'Solaris',
+        :release         => '11',
+        :include_idmap   => false,
+        :include_rpcbind => false,
+        :packages        => ['SUNWnfsckr','SUNWnfscr','SUNWnfscu','SUNWnfsskr','SUNWnfssr','SUNWnfssu'],
+        :service         => 'nfs/client',
+        :provider        => 'sun',
       },
     'solaris11' =>
       { :osfamily        => 'Solaris',
@@ -189,6 +199,15 @@ describe 'nfs' do
                 'ensure' => 'present',
               })
             }
+
+          if v[:provider]
+            it {
+              should contain_package(pkg).with({
+                'provider' => v[:provider],
+              })
+            }
+          end
+
             # Building the array of Packages for service's subscribe attribute.
             service_subscribe << "Package[#{pkg}]"
           end

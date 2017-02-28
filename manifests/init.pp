@@ -3,10 +3,11 @@
 # Manages NFS
 #
 class nfs (
-  $hiera_hash  = false,
-  $nfs_package = 'USE_DEFAULTS',
-  $nfs_service = 'USE_DEFAULTS',
-  $mounts      = undef,
+  $hiera_hash           = false,
+  $nfs_package          = 'USE_DEFAULTS',
+  $nfs_service          = 'USE_DEFAULTS',
+  $mounts               = undef,
+  $nfs_package_provider = 'USE_DEFAULTS',
 ) {
 
   if type3x($hiera_hash) == 'string' {
@@ -81,6 +82,13 @@ class nfs (
       }
 
       $default_nfs_service = 'nfs/client'
+
+      Package {
+        provider         => $nfs_package_provider ? {
+          'USE_DEFAULTS' => 'sun',
+          default        => $nfs_package_provider,
+        }
+      }
     }
     'Suse' : {
 
