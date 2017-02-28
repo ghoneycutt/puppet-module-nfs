@@ -52,7 +52,7 @@ class nfs (
         '7': {
           include ::rpcbind
           include ::nfs::idmap
-          $default_nfs_service = undef
+          $default_nfs_service = 'nfs-server'
         }
         default: {
           fail("nfs module only supports EL 5, 6 and 7 and operatingsystemmajrelease was detected as <${::operatingsystemmajrelease}>.")
