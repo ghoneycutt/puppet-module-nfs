@@ -119,6 +119,14 @@ idmapd_service_name
 String of the service name.
 - *Default*: rpcidmapd
 
+idmapd_service_ensure
+---------------------
+Boolean value of ensure parameter for idmapd service. Default is based
+on the platform. If running EL7 as an nfs-server, this must be set to
+'running'.
+
+- *Default*: 'USE_DEFAULTS'
+
 idmapd_service_enable
 ---------------------
 Boolean value of enable parameter for idmapd service.

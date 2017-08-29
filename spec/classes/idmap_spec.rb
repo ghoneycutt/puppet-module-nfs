@@ -68,6 +68,57 @@ describe 'nfs::idmap' do
     }
   end
 
+  context 'with default values on EL 7' do
+    let :facts do
+      {
+        :osfamily                  => 'RedHat',
+        :operatingsystemmajrelease => '7',
+        :domain                    => 'example.com',
+      }
+    end
+
+    it { should compile.with_all_deps }
+
+    it {
+      should contain_package('libnfsidmap').with({
+        'ensure' => 'present',
+      })
+    }
+
+    it {
+      should contain_file('idmapd_conf').with({
+        'ensure'  => 'file',
+        'path'    => '/etc/idmapd.conf',
+        'owner'   => 'root',
+        'group'   => 'root',
+        'mode'    => '0644',
+        'require' => 'Package[libnfsidmap]',
+      })
+    }
+
+    it { should contain_file('idmapd_conf').with_content(/^Domain = example.com$/) }
+    it { should contain_file('idmapd_conf').with_content(/^Verbosity = 0$/) }
+    it { should contain_file('idmapd_conf').with_content(/^Nobody-User = nobody$/) }
+    it { should contain_file('idmapd_conf').with_content(/^Nobody-Group = nobody$/) }
+    it { should contain_file('idmapd_conf').with_content(/^Method = nsswitch$/) }
+    it { should contain_file('idmapd_conf').with_content(/^#Local-Realms = EXAMPLE.COM$/) }
+
+    it { should_not contain_file('idmapd_conf').with_content(/^Pipefs-Directory = \/var\/lib\/nfs\/rpc_pipefs$/) }
+    it { should_not contain_file('idmapd_conf').with_content(/^LDAP_server/) }
+    it { should_not contain_file('idmapd_conf').with_content(/^LDAP_base/) }
+
+    it {
+      should contain_service('idmapd_service').with({
+        'ensure'     => 'stopped',
+        'name'       => 'nfs-idmap',
+        'enable'     => 'true',
+        'hasstatus'  => 'true',
+        'hasrestart' => 'true',
+        'subscribe'  => 'File[idmapd_conf]',
+      })
+    }
+  end
+
   context 'with default values on Suse 11' do
     let :facts do
       {

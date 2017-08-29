@@ -25,11 +25,13 @@ class nfs::server (
     refreshonly => true,
   }
 
-  Service['nfs_service'] {
-    ensure     => running,
-    enable     => true,
-    hasstatus  => true,
-    hasrestart => true,
-    require    => File['nfs_exports'],
+  if $::osfamily == 'RedHat' and $::operatingsystemmajrelease != '7' {
+    Service['nfs_service'] {
+      ensure     => running,
+      enable     => true,
+      hasstatus  => true,
+      hasrestart => true,
+      require    => File['nfs_exports'],
+    }
   }
 }
