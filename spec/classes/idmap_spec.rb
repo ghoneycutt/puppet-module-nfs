@@ -13,7 +13,7 @@ describe 'nfs::idmap' do
     it 'should fail' do
       expect {
         should contain_class('ssh')
-      }.to raise_error(Puppet::Error,/idmap only supports EL versions 5, 6 and 7\. Detected operatingsystemmajrelease is 4\./)
+      }.to raise_error(Puppet::Error,/idmap only supports EL versions 6 and 7\. Detected operatingsystemmajrelease is 4\./)
     end
   end
 
@@ -158,31 +158,6 @@ describe 'nfs::idmap' do
 
     it {
       should contain_file('idmapd_conf').with_content(/^Domain = example.com$/)
-    }
-  end
-
-  context 'with idmap_domain set to valid.tld on EL 5' do
-    let :params do
-      {
-        :idmap_domain   => 'valid.tld',
-      }
-    end
-    let :facts do
-      {
-        :osfamily => 'RedHat',
-        :operatingsystemmajrelease => '5',
-      }
-    end
-
-    it {
-      should contain_file('idmapd_conf').with({
-        'ensure' => 'file',
-        'path'   => '/etc/idmapd.conf',
-        'owner'  => 'root',
-        'group'  => 'root',
-        'mode'   => '0644',
-      })
-      should contain_file('idmapd_conf').with_content(/Domain = valid.tld/)
     }
   end
 

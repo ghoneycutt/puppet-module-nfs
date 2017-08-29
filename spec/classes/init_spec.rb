@@ -7,7 +7,7 @@ describe 'nfs' do
 
       it 'should fail' do
         expect {
-          should raise_error(Puppet::Error, /nfs module only supports osfamilies Debian, RedHat, Solaris and Suse, and <Unsupported> was detected\./)
+          should raise_error(Puppet::Error, /nfs module only supports osfamilies RedHat, Solaris and Suse, and <Unsupported> was detected\./)
         }
       end
     end
@@ -21,7 +21,7 @@ describe 'nfs' do
 
       it 'should fail' do
         expect {
-          should raise_error(Puppet::Error, /nfs module only supports EL 5, 6 and 7 and operatingsystemmajrelease was detected as <4>\./)
+          should raise_error(Puppet::Error, /nfs module only supports EL 6 and 7 and operatingsystemmajrelease was detected as <4>\./)
         }
       end
     end
@@ -35,21 +35,7 @@ describe 'nfs' do
 
       it 'should fail' do
         expect {
-          should raise_error(Puppet::Error, /nfs module only supports Suse 10, 11 and 12 and lsbmajdistrelease was detected as <9>\./)
-        }
-      end
-    end
-
-    context 'lsbdistid of osfamily Debian' do
-      let :facts do
-        { :osfamily  => 'Debian',
-          :lsbdistid => 'unsupported',
-        }
-      end
-
-      it 'should fail' do
-        expect {
-          should raise_error(Puppet::Error, /nfs module only supports lsbdistid Debian and Ubuntu of osfamily Debian\. Detected lsbdistid is <unsupported>\./)
+          should raise_error(Puppet::Error, /nfs module only supports Suse 11 and 12 and lsbmajdistrelease was detected as <9>\./)
         }
       end
     end
@@ -70,31 +56,6 @@ describe 'nfs' do
   end
 
   platforms = {
-    'debian' =>
-      { :osfamily        => 'Debian',
-        :lsbdistid       => 'Debian',
-        :release         => '6',
-        :include_idmap   => false,
-        :include_rpcbind => true,
-        :packages        => 'nfs-common',
-        :service         => 'nfs-common',
-      },
-    'ubuntu' =>
-      { :osfamily        => 'Debian',
-        :lsbdistid       => 'Ubuntu',
-        :release         => '12',
-        :include_idmap   => false,
-        :include_rpcbind => true,
-        :packages        => 'nfs-common',
-      },
-    'el5' =>
-      { :osfamily        => 'RedHat',
-        :release         => '5',
-        :include_idmap   => true,
-        :include_rpcbind => false,
-        :packages        => 'nfs-utils',
-        :service         => 'nfs',
-      },
     'el6' =>
       { :osfamily        => 'RedHat',
         :release         => '6',
@@ -126,14 +87,6 @@ describe 'nfs' do
         :include_rpcbind => false,
         :packages        => ['service/file-system/nfs','system/file-system/nfs'],
         :service         => 'nfs/client',
-      },
-    'suse10' =>
-      { :osfamily        => 'Suse',
-        :release         => '10',
-        :include_idmap   => true,
-        :include_rpcbind => false,
-        :packages        => 'nfs-utils',
-        :service         => 'nfs',
       },
     'suse11' =>
       { :osfamily        => 'Suse',

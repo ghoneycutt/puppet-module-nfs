@@ -17,33 +17,11 @@ class nfs (
   validate_bool($hiera_hash_real)
 
   case $::osfamily {
-    'Debian': {
-
-      include ::rpcbind
-
-      $default_nfs_package = 'nfs-common'
-
-      case $::lsbdistid {
-        'Debian': {
-          $default_nfs_service = 'nfs-common'
-        }
-        'Ubuntu': {
-          $default_nfs_service = undef
-        }
-        default: {
-          fail("nfs module only supports lsbdistid Debian and Ubuntu of osfamily Debian. Detected lsbdistid is <${::lsbdistid}>.")
-        }
-      }
-    }
     'RedHat': {
 
       $default_nfs_package = 'nfs-utils'
 
       case $::operatingsystemmajrelease {
-        '5': {
-          include ::nfs::idmap
-          $default_nfs_service = 'nfs'
-        }
         '6': {
           include ::rpcbind
           include ::nfs::idmap
@@ -55,7 +33,7 @@ class nfs (
           $default_nfs_service = undef
         }
         default: {
-          fail("nfs module only supports EL 5, 6 and 7 and operatingsystemmajrelease was detected as <${::operatingsystemmajrelease}>.")
+          fail("nfs module only supports EL 6 and 7 and operatingsystemmajrelease was detected as <${::operatingsystemmajrelease}>.")
         }
       }
     }
@@ -88,22 +66,18 @@ class nfs (
       $default_idmap_service = 'rpcidmapd'
 
       case $::lsbmajdistrelease {
-        '10': {
-          $default_nfs_package = 'nfs-utils'
-          $default_nfs_service = 'nfs'
-        }
         '11','12': {
           $default_nfs_package = 'nfs-client'
           $default_nfs_service = 'nfs'
         }
         default: {
-          fail("nfs module only supports Suse 10, 11 and 12 and lsbmajdistrelease was detected as <${::lsbmajdistrelease}>.")
+          fail("nfs module only supports Suse 11 and 12 and lsbmajdistrelease was detected as <${::lsbmajdistrelease}>.")
         }
       }
     }
 
     default: {
-      fail("nfs module only supports osfamilies Debian, RedHat, Solaris and Suse, and <${::osfamily}> was detected.")
+      fail("nfs module only supports osfamilies RedHat, Solaris and Suse, and <${::osfamily}> was detected.")
     }
   }
 

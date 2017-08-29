@@ -19,20 +19,15 @@ Puppet module to manage NFS client and server
 
 ## Compatibility ##
 
-This module has been tested to work on the following systems with Puppet v3
-(with and without the future parser) and Puppet v4 with Ruby versions 1.8.7,
-1.9.3, 2.0.0, 2.1.0 and 2.3.1.
+This module has been tested to work on the following systems with Puppet v4
+with ruby 2.1.9.
 
- * Debian 6 (client only)
- * EL 5
  * EL 6
  * EL 7
  * Solaris 10
  * Solaris 11
- * Suse 10
  * Suse 11
  * Suse 12
- * Ubuntu 12.04 LTS
 
 ===
 
@@ -197,13 +192,11 @@ Mount nfs.example.com:/vol1 on /mnt/vol1 and nfs.example.com:/vol2 on /mnt/vol2
 <pre>
 nfs::mounts:
   /mnt/vol1:
-    ensure: present
     device: nfs.example.com:/vol1
     options: rw,rsize=8192,wsize=8192
     fstype: nfs
   old_log_file_mount:
     name: /mnt/vol2
-    ensure: present
     device: nfs.example.com:/vol2
     fstype: nfs
 </pre>
