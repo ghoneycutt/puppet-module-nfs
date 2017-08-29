@@ -24,10 +24,10 @@ with ruby 2.1.9.
 
  * EL 6
  * EL 7
- * Solaris 10
- * Solaris 11
- * Suse 11
- * Suse 12
+ * Solaris 10 (client only)
+ * Solaris 11 (client only)
+ * Suse 11    (client only)
+ * Suse 12    (client only)
 
 ===
 
