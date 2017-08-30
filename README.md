@@ -19,8 +19,9 @@ Puppet module to manage NFS client and server
 
 ## Compatibility ##
 
-This module has been tested to work on the following systems with Puppet v4
-with ruby 2.1.9.
+This module has been tested to work on the following systems with Puppet
+v4 and v5 using the ruby versions that are shipped with each. See
+`.travis.yml` for the exact matrix.
 
  * EL 6
  * EL 7

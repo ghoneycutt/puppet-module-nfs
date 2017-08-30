@@ -9,7 +9,7 @@
   "project_page": "https://github.com/ghoneycutt/puppet-module-nfs",
   "issues_url": "https://github.com/ghoneycutt/puppet-module-nfs/issues",
   "requirements": [
-    {"name":"puppet","version_requirement":">= 4.0.0 < 5.0.0"}
+    {"name":"puppet","version_requirement":">= 4.0.0 < 6.0.0"}
   ],
   "dependencies": [
     {"name":"ghoneycutt/common","version_requirement":">= 1.7.0 < 2.0.0"},
