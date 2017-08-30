@@ -3,32 +3,24 @@
 # Manages NFS
 #
 class nfs (
-  $hiera_hash  = false,
-  $nfs_package = 'USE_DEFAULTS',
-  $nfs_service = 'USE_DEFAULTS',
-  $mounts      = undef,
+  Boolean               $hiera_hash  = true,
+  String                $nfs_package = 'USE_DEFAULTS',
+  String                $nfs_service = 'USE_DEFAULTS',
+  Variant[Undef, Hash]  $mounts      = undef,
 ) {
-
-  if type3x($hiera_hash) == 'string' {
-    $hiera_hash_real = str2bool($hiera_hash)
-  } else {
-    $hiera_hash_real = $hiera_hash
-  }
-  validate_bool($hiera_hash_real)
 
   case $::osfamily {
     'RedHat': {
-
       $default_nfs_package = 'nfs-utils'
 
       case $::operatingsystemmajrelease {
         '6': {
-          include ::rpcbind
+          require ::rpcbind
           include ::nfs::idmap
           $default_nfs_service = 'nfs'
         }
         '7': {
-          include ::rpcbind
+          require ::rpcbind
           include ::nfs::idmap
           $default_nfs_service = undef
         }
@@ -38,40 +30,41 @@ class nfs (
       }
     }
     'Solaris': {
+      $default_nfs_service = 'nfs/client'
+
       case $::kernelrelease {
         '5.10': {
-          $default_nfs_package = [ 'SUNWnfsckr',
-                                    'SUNWnfscr',
-                                    'SUNWnfscu',
-                                    'SUNWnfsskr',
-                                    'SUNWnfssr',
-                                    'SUNWnfssu',
+          $default_nfs_package = [
+            'SUNWnfsckr',
+            'SUNWnfscr',
+            'SUNWnfscu',
+            'SUNWnfsskr',
+            'SUNWnfssr',
+            'SUNWnfssu',
           ]
         }
         '5.11': {
-          $default_nfs_package = [ 'service/file-system/nfs',
-                                    'system/file-system/nfs',
+          $default_nfs_package = [
+            'service/file-system/nfs',
+            'system/file-system/nfs',
           ]
         }
         default: {
           fail("nfs module only supports Solaris 5.10 and 5.11 and kernelrelease was detected as <${::kernelrelease}>.")
         }
       }
-
-      $default_nfs_service = 'nfs/client'
     }
     'Suse' : {
-
       include ::nfs::idmap
       $default_idmap_service = 'rpcidmapd'
 
-      case $::lsbmajdistrelease {
+      case $::operatingsystemmajrelease {
         '11','12': {
           $default_nfs_package = 'nfs-client'
           $default_nfs_service = 'nfs'
         }
         default: {
-          fail("nfs module only supports Suse 11 and 12 and lsbmajdistrelease was detected as <${::lsbmajdistrelease}>.")
+          fail("nfs module only supports Suse 11 and 12 and operatingsystemmajrelease was detected as <${::operatingsystemmajrelease}>.")
         }
       }
     }
@@ -107,15 +100,16 @@ class nfs (
   }
 
   if $mounts != undef {
-
-    if $hiera_hash_real == true {
-      $mounts_real = hiera_hash('nfs::mounts')
+    if $hiera_hash == true {
+      $mounts_real = lookup('nfs::mounts', Hash, 'hash')
     } else {
       $mounts_real = $mounts
-      notice('Future versions of the nfs module will default nfs::hiera_hash to true')
     }
 
-    validate_hash($mounts_real)
-    create_resources('types::mount',$mounts_real)
+    $mounts_real.each |$k,$v| {
+      ::types::mount { $k:
+        * => $v,
+      }
+    }
   }
 }

@@ -3,10 +3,10 @@
 # Manages an NFS Server
 #
 class nfs::server (
-  $exports_path   = '/etc/exports',
-  $exports_owner  = 'root',
-  $exports_group  = 'root',
-  $exports_mode   = '0644',
+  Stdlib::Absolutepath   $exports_path   = '/etc/exports',
+  String                 $exports_owner  = 'root',
+  String                 $exports_group  = 'root',
+  Pattern[/^[0-7]{4}$/]  $exports_mode   = '0644',
 ) inherits nfs {
 
   # GH: TODO - use file fragment pattern

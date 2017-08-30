@@ -1,5 +1,6 @@
 require 'spec_helper'
 describe 'nfs' do
+  let(:params) { { :hiera_hash => false } }
 
   describe 'on unsupported' do
     context 'osfamily' do
@@ -29,13 +30,13 @@ describe 'nfs' do
     context 'version of Suse' do
       let :facts do
         { :osfamily          => 'Suse',
-          :lsbmajdistrelease => '9',
+          :operatingsystemmajrelease => '9',
         }
       end
 
       it 'should fail' do
         expect {
-          should raise_error(Puppet::Error, /nfs module only supports Suse 11 and 12 and lsbmajdistrelease was detected as <9>\./)
+          should raise_error(Puppet::Error, /nfs module only supports Suse 11 and 12 and operatingsystemmajrelease was detected as <9>\./)
         }
       end
     end
@@ -107,12 +108,10 @@ describe 'nfs' do
   }
   describe 'with default values for parameters' do
     platforms.sort.each do |k,v|
-      context "where osfamily is <#{v[:osfamily]}> lsbdistid is <#{v[:lsbdistid]}> kernelrelease is <#{v[:kernelrelease]}> and release is <#{v[:release]}>" do
+      context "where osfamily is <#{v[:osfamily]}> kernelrelease is <#{v[:kernelrelease]}> and release is <#{v[:release]}>" do
         let :facts do
           { :osfamily                  => v[:osfamily],
-            :lsbmajdistrelease         => v[:release],
             :operatingsystemmajrelease => v[:release],
-            :lsbdistid                 => v[:lsbdistid],
             :kernelrelease             => v[:kernelrelease],
           }
         end
@@ -196,7 +195,7 @@ describe 'nfs' do
       end
     end
 
-    ['true',true].each do |value|
+    [true].each do |value|
       context "as #{value}" do
         let(:params) { { :hiera_hash => value } }
         let(:facts) do
@@ -211,7 +210,7 @@ describe 'nfs' do
       end
     end
 
-    ['false',false].each do |value|
+    [false].each do |value|
       context "as #{value}" do
         let(:params) { { :hiera_hash => value } }
         let(:facts) do
@@ -235,13 +234,16 @@ describe 'nfs' do
     end
 
     let :params do
-      { :mounts => {
-        '/var/foo' => {
-          'ensure' => 'present',
-          'fstype' => 'nfs',
-          'device' => '/net/foo',
+      {
+        :hiera_hash => false,
+        :mounts     => {
+          '/var/foo' => {
+            'ensure' => 'present',
+            'fstype' => 'nfs',
+            'device' => '/net/foo',
+          }
         }
-      } }
+      }
     end
 
     it {

@@ -3,10 +3,12 @@
 #
 [General]
 Verbosity = <%= @verbosity %>
-<% if @pipefs_directory_real != 'UNSET' %>Pipefs-Directory = /var/lib/nfs/rpc_pipefs<% end %>
+<% if @pipefs_directory_real != nil -%>
+Pipefs-Directory = <%= @pipefs_directory_real %>
+<% end %>
 # The following should be set to the local NFSv4 domain name
 # The default is the host's DNS domain name.
-<% if @idmap_domain != 'UNSET' %>Domain = <%= @idmap_domain %><% end %>
+Domain = <%= @idmap_domain %>
 
 # The following is a comma-separated list of Kerberos realm
 # names that should be considered to be equivalent to the
@@ -17,7 +19,11 @@ Verbosity = <%= @verbosity %>
 # translated to upper-case.
 # Note that if this value is specified, the local realm name
 # must be included in the list!
-#Local-Realms = <%= @local_realms_real.upcase %>
+<% if @local_realms.class == Array -%>
+#Local-Realms = <%= @local_realms.join(',').upcase %>
+<% else -%>
+#Local-Realms = <%= @local_realms.upcase %>
+<% end -%>
 
 [Mapping]
 
@@ -32,7 +38,11 @@ Nobody-Group = <%= @nobody_group %>
 # is a dynamically loadable plugin library.
 # New methods may be defined and inserted in the list.
 # The default is "nsswitch".
-Method = <%= @translation_method_real %>
+<% if @translation_method.class == Array -%>
+Method = <%= @translation_method.join(',') %>
+<% else -%>
+Method = <%= @translation_method %>
+<% end -%>
 
 # Optional.  This is a comma-separated, ordered list of
 # translation methods to be used for translating GSS
@@ -58,9 +68,17 @@ Method = <%= @translation_method_real %>
 
 #[UMICH_SCHEMA]
 
-<% if @ldap_server != 'UNSET' %>LDAP_server = <%= @ldap_server %><% end -%>
+<% if @ldap_server != nil -%>
+LDAP_server = <%= @ldap_server %>
+<% end -%>
 
-<% if @ldap_base != 'UNSET' %>LDAP_base = <%= @ldap_base_real %><% end -%>
+<% if @ldap_base != nil -%>
+<%   if @ldap_base.class == Array -%>
+LDAP_base = <%= @ldap_base.join(',') %>
+<%   else -%>
+LDAP_base = <%= @ldap_base %>
+<%   end -%>
+<% end -%>
 
 #-----------------------------------------------------------#
 # The remaining options have defaults (as shown)

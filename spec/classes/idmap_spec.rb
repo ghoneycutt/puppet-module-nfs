@@ -52,9 +52,9 @@ describe 'nfs::idmap' do
     it { should contain_file('idmapd_conf').with_content(/^Method = nsswitch$/) }
     it { should contain_file('idmapd_conf').with_content(/^#Local-Realms = EXAMPLE.COM$/) }
 
-    it { should_not contain_file('idmapd_conf').with_content(/^Pipefs-Directory = \/var\/lib\/nfs\/rpc_pipefs$/) }
-    it { should_not contain_file('idmapd_conf').with_content(/^LDAP_server/) }
-    it { should_not contain_file('idmapd_conf').with_content(/^LDAP_base/) }
+    it { should contain_file('idmapd_conf').without_content(/^\s*Pipefs-Directory/) }
+    it { should contain_file('idmapd_conf').without_content(/^LDAP_server/) }
+    it { should contain_file('idmapd_conf').without_content(/^LDAP_base/) }
 
     it {
       should contain_service('idmapd_service').with({
@@ -103,9 +103,9 @@ describe 'nfs::idmap' do
     it { should contain_file('idmapd_conf').with_content(/^Method = nsswitch$/) }
     it { should contain_file('idmapd_conf').with_content(/^#Local-Realms = EXAMPLE.COM$/) }
 
-    it { should_not contain_file('idmapd_conf').with_content(/^Pipefs-Directory = \/var\/lib\/nfs\/rpc_pipefs$/) }
-    it { should_not contain_file('idmapd_conf').with_content(/^LDAP_server/) }
-    it { should_not contain_file('idmapd_conf').with_content(/^LDAP_base/) }
+    it { should contain_file('idmapd_conf').without_content(/^\s*Pipefs-Directory/) }
+    it { should contain_file('idmapd_conf').without_content(/^LDAP_server/) }
+    it { should contain_file('idmapd_conf').without_content(/^LDAP_base/) }
 
     it {
       should contain_service('idmapd_service').with({
@@ -122,9 +122,9 @@ describe 'nfs::idmap' do
   context 'with default values on Suse 11' do
     let :facts do
       {
-        :osfamily          => 'Suse',
-        :lsbmajdistrelease => '11',
-        :domain            => 'example.com',
+        :osfamily                  => 'Suse',
+        :operatingsystemmajrelease => '11',
+        :domain                    => 'example.com',
       }
     end
 
@@ -155,50 +155,71 @@ describe 'nfs::idmap' do
     it { should contain_file('idmapd_conf').with_content(/^Method = nsswitch$/) }
     it { should contain_file('idmapd_conf').with_content(/^#Local-Realms = EXAMPLE.COM$/) }
 
-    it { should_not contain_file('idmapd_conf').with_content(/^LDAP_server/) }
-    it { should_not contain_file('idmapd_conf').with_content(/^LDAP_base/) }
+    it { should contain_file('idmapd_conf').without_content(/^LDAP_server/) }
+    it { should contain_file('idmapd_conf').without_content(/^LDAP_base/) }
 
     it { should_not contain_service('idmapd_service') }
   end
 
-  context 'with pipefs_directory parameter set to invalid value' do
-    let :facts do
-      {
-        :osfamily => 'RedHat',
-        :operatingsystemmajrelease => '7',
-      }
+  describe 'with pipefs_directory parameter' do
+    context 'set to a valid path' do
+      let :facts do
+        {
+          :osfamily => 'RedHat',
+          :operatingsystemmajrelease => '7',
+        }
+      end
+
+      let :params do
+        { :pipefs_directory => '/valid/path' }
+      end
+
+      it { should contain_file('idmapd_conf').with_content(/^Pipefs-Directory = \/valid\/path$/) }
     end
 
-    let :params do
-      { :pipefs_directory => 'invalid/path' }
+    context 'set to invalid path' do
+      let :facts do
+        {
+          :osfamily => 'RedHat',
+          :operatingsystemmajrelease => '7',
+        }
+      end
+
+      let :params do
+        { :pipefs_directory => 'invalid/path' }
+      end
+
+      it 'should fail' do
+        expect {
+          should contain_class('ssh')
+        }.to raise_error(Puppet::Error,/Evaluation Error/)
+      end
     end
 
-    it 'should fail' do
-      expect {
-        should contain_class('ssh')
-      }.to raise_error(Puppet::Error,/"invalid\/path" is not an absolute path/)
-    end
-  end
+    context 'with pipefs_directory parameter set to \'UNSET\'' do
+      let :facts do
+        {
+          :osfamily => 'RedHat',
+          :operatingsystemmajrelease => '7',
+        }
+      end
 
-  context 'with pipefs_directory parameter set to \'UNSET\'' do
-    let :facts do
-      {
-        :osfamily => 'RedHat',
-        :operatingsystemmajrelease => '7',
-      }
-    end
+      let :params do
+        { :pipefs_directory => 'UNSET' }
+      end
 
-    let :params do
-      { :pipefs_directory => 'UNSET' }
+      it 'should fail' do
+        expect {
+          should contain_class('ssh')
+        }.to raise_error(Puppet::Error,/Evaluation Error/)
+      end
     end
-
-    it { should_not contain_file('idmapd_conf').with_content(/^Pipefs-Directory = UNSET$/) }
   end
 
   context 'with idmap_domain set to a valid domain, example.com' do
     let :facts do
       {
-        :osfamily => 'RedHat',
+        :osfamily                  => 'RedHat',
         :operatingsystemmajrelease => '7',
       }
     end
@@ -207,34 +228,7 @@ describe 'nfs::idmap' do
       { :idmap_domain => 'example.com' }
     end
 
-    it {
-      should contain_file('idmapd_conf').with_content(/^Domain = example.com$/)
-    }
-  end
-
-  context 'with idmap_domain set to valid.tld on EL 6' do
-    let :params do
-      {
-        :idmap_domain   => 'valid.tld',
-      }
-    end
-    let :facts do
-      {
-        :osfamily => 'RedHat',
-        :operatingsystemmajrelease => '6',
-      }
-    end
-
-    it {
-      should contain_file('idmapd_conf').with({
-        'ensure' => 'file',
-        'path'   => '/etc/idmapd.conf',
-        'owner'  => 'root',
-        'group'  => 'root',
-        'mode'   => '0644',
-      })
-      should contain_file('idmapd_conf').with_content(/Domain = valid.tld/)
-    }
+    it { should contain_file('idmapd_conf').with_content(/^Domain = example.com$/) }
   end
 
   context 'with ldap_base set to a single valid base, dc=edu' do
@@ -305,24 +299,45 @@ describe 'nfs::idmap' do
     }
   end
 
-  context 'with ldap_server set to a valid host, ldap.example.com' do
-    let :facts do
-      {
-        :osfamily => 'RedHat',
-        :operatingsystemmajrelease => '7',
+  describe 'with ldap_server' do
+    context 'set to a valid host, ldap.example.com' do
+      let :facts do
+        {
+          :osfamily => 'RedHat',
+          :operatingsystemmajrelease => '7',
+        }
+      end
+
+      let :params do
+        { :ldap_server => 'ldap.example.com' }
+      end
+
+      it {
+        should contain_file('idmapd_conf').with_content(/^LDAP_server = ldap.example.com$/)
       }
     end
 
-    let :params do
-      { :ldap_server => 'ldap.example.com' }
-    end
+    context 'with an invalid ldap_server set' do
+      let :facts do
+        {
+          :osfamily => 'RedHat',
+          :operatingsystemmajrelease => '7',
+        }
+      end
 
-    it {
-      should contain_file('idmapd_conf').with_content(/^LDAP_server = ldap.example.com$/)
-    }
+      let :params do
+        { :ldap_server => 'invalid' }
+      end
+
+      it 'should fail' do
+        expect {
+          should raise_error(Puppet::Error, /nfs::idmap::ldap_server parameter, <invalid>, is not a valid name\./)
+        }
+      end
+    end
   end
 
-  context 'with an invalid ldap_server set' do
+  context 'with verbosity set to a valid integer, 1' do
     let :facts do
       {
         :osfamily => 'RedHat',
@@ -331,26 +346,7 @@ describe 'nfs::idmap' do
     end
 
     let :params do
-      { :ldap_server => 'invalid' }
-    end
-
-    it 'should fail' do
-      expect {
-        should raise_error(Puppet::Error, /nfs::idmap::ldap_server parameter, <invalid>, is not a valid name\./)
-      }
-    end
-  end
-
-  context 'with verbosity set to a valid number, 1' do
-    let :facts do
-      {
-        :osfamily => 'RedHat',
-        :operatingsystemmajrelease => '7',
-      }
-    end
-
-    let :params do
-      { :verbosity => '1' }
+      { :verbosity => 1 }
     end
 
     it {
@@ -358,7 +354,7 @@ describe 'nfs::idmap' do
     }
   end
 
-  context 'with an invalid verbosity set' do
+  context 'with an invalid (string) verbosity set' do
     let :facts do
       {
         :osfamily => 'RedHat',

@@ -3,26 +3,28 @@
 # Manages idmapd
 #
 class nfs::idmap (
-  $idmap_package             = 'USE_DEFAULTS',
-  $idmapd_conf_path          = '/etc/idmapd.conf',
-  $idmapd_conf_owner         = 'root',
-  $idmapd_conf_group         = 'root',
-  $idmapd_conf_mode          = '0644',
-  $idmapd_service_name       = 'USE_DEFAULTS',
-  $idmapd_service_ensure     = 'USE_DEFAULTS',
-  $idmapd_service_enable     = true,
-  $idmapd_service_hasstatus  = true,
-  $idmapd_service_hasrestart = true,
+  String                 $idmap_package             = 'USE_DEFAULTS',
+  Stdlib::Absolutepath   $idmapd_conf_path          = '/etc/idmapd.conf',
+  String                 $idmapd_conf_owner         = 'root',
+  String                 $idmapd_conf_group         = 'root',
+  Pattern[/^[0-7]{4}$/]  $idmapd_conf_mode          = '0644',
+  String                 $idmapd_service_name       = 'USE_DEFAULTS',
+  String                 $idmapd_service_ensure     = 'USE_DEFAULTS',
+  Boolean                $idmapd_service_enable     = true,
+  Boolean                $idmapd_service_hasstatus  = true,
+  Boolean                $idmapd_service_hasrestart = true,
   # idmapd.conf options
-  $idmap_domain              = $::domain,
-  $ldap_server               = 'UNSET',
-  $ldap_base                 = 'UNSET',
-  $local_realms              = $::domain,
-  $translation_method        = 'nsswitch',
-  $nobody_user               = 'nobody',
-  $nobody_group              = 'nobody',
-  $verbosity                 = '0',
-  $pipefs_directory          = 'USE_DEFAULTS',
+  String                                $idmap_domain       = $::domain,
+  Variant[Undef, String]                $ldap_server        = undef,
+  Variant[Undef, String, Array]         $ldap_base          = undef,
+  Variant[String, Array]                $local_realms       = $::domain,
+  Variant[Array,
+    Pattern[/^(nsswitch|umich_ldap|static)$/]
+  ]                                     $translation_method = 'nsswitch',
+  String                                $nobody_user        = 'nobody',
+  String                                $nobody_group       = 'nobody',
+  Integer                               $verbosity          = 0,
+  Variant[Undef, Stdlib::Absolutepath]  $pipefs_directory   = undef,
 ) {
 
   $is_idmap_domain_valid = is_domain_name($idmap_domain)
@@ -30,60 +32,17 @@ class nfs::idmap (
     fail("nfs::idmap::idmap_domain parameter, <${idmap_domain}>, is not a valid name.")
   }
 
-  $is_ldap_server_valid = is_domain_name($ldap_server)
-  if $is_ldap_server_valid != true {
-    fail("nfs::idmap::ldap_server parameter, <${ldap_server}>, is not a valid name.")
-  }
-  validate_re($verbosity, '^(\d+)$', "verbosity parameter, <${verbosity}>, does not match regex.")
-
-  $ldap_base_type = type3x($ldap_base)
-
-  case $ldap_base_type {
-    'String': {
-      $ldap_base_real = $ldap_base
-    }
-    'Array': {
-      $ldap_base_real = inline_template('<%= @ldap_base.join(\',\') %>')
-    }
-    default: {
-      fail("valid types for ldap_base are String and Array. Detected type is <${ldap_base_type}>")
-    }
-  }
-
-  $local_realms_type = type3x($local_realms)
-
-  case $local_realms_type {
-    'String': {
-      $local_realms_real = $local_realms
-    }
-    'Array': {
-      $local_realms_real = inline_template('<%= @local_realms.join(\',\') %>')
-    }
-    default: {
-      fail("valid types for local_realms are String and Array. Detected type is <${local_realms_type}>")
-    }
-  }
-
-  $translation_method_type = type3x($translation_method)
-
-  case $translation_method_type {
-    'String': {
-      $translation_method_real = $translation_method
-      validate_re($translation_method_real, '^(nsswitch|umich_ldap|static)$', "translation_method, <${translation_method}>, does not match regex.")
-    }
-    'Array': {
-      $translation_method_real = inline_template('<%= @translation_method.join(\',\') %>')
-      # GH: TODO: write valid regex
-    }
-    default: {
-      fail("valid types for translation_method are String and Array. Detected type is <${translation_method_type}>")
+  if $ldap_server != undef {
+    $is_ldap_server_valid = is_domain_name($ldap_server)
+    if $is_ldap_server_valid != true {
+      fail("nfs::idmap::ldap_server parameter, <${ldap_server}>, is not a valid name.")
     }
   }
 
   case $::osfamily {
     'RedHat' : {
 
-      $default_pipefs_directory = 'UNSET'
+      $default_pipefs_directory = undef
 
       case $::operatingsystemmajrelease {
         '6': {
@@ -130,14 +89,10 @@ class nfs::idmap (
     $idmapd_service_ensure_real = $idmapd_service_ensure
   }
 
-  if $pipefs_directory == 'USE_DEFAULTS' {
+  if $pipefs_directory == undef {
     $pipefs_directory_real = $default_pipefs_directory
   } else {
     $pipefs_directory_real = $pipefs_directory
-  }
-
-  if $pipefs_directory_real != 'UNSET' {
-    validate_absolute_path($pipefs_directory_real)
   }
 
   package { $idmap_package_real:
