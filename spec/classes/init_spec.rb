@@ -64,6 +64,8 @@ describe 'nfs' do
         :include_rpcbind => true,
         :packages        => 'nfs-utils',
         :service         => 'nfs',
+        :service_ensure  => 'stopped',
+        :service_enable  => false,
       },
     'el7' =>
       { :osfamily        => 'RedHat',
@@ -72,6 +74,8 @@ describe 'nfs' do
         :include_rpcbind => true,
         :packages        => 'nfs-utils',
         :service         => nil,
+        :service_ensure  => 'stopped',
+        :service_enable  => false,
       },
     'solaris10' =>
       { :osfamily        => 'Solaris',
@@ -80,6 +84,8 @@ describe 'nfs' do
         :include_rpcbind => false,
         :packages        => ['SUNWnfsckr','SUNWnfscr','SUNWnfscu','SUNWnfsskr','SUNWnfssr','SUNWnfssu'],
         :service         => 'nfs/client',
+        :service_ensure  => 'running',
+        :service_enable  => true,
       },
     'solaris11' =>
       { :osfamily        => 'Solaris',
@@ -88,6 +94,8 @@ describe 'nfs' do
         :include_rpcbind => false,
         :packages        => ['service/file-system/nfs','system/file-system/nfs'],
         :service         => 'nfs/client',
+        :service_ensure  => 'running',
+        :service_enable  => true,
       },
     'suse11' =>
       { :osfamily        => 'Suse',
@@ -96,6 +104,8 @@ describe 'nfs' do
         :include_rpcbind => false,
         :packages        => 'nfs-client',
         :service         => 'nfs',
+        :service_ensure  => 'running',
+        :service_enable  => true,
       },
     'suse12' =>
       { :osfamily        => 'Suse',
@@ -104,6 +114,8 @@ describe 'nfs' do
         :include_rpcbind => false,
         :packages        => 'nfs-client',
         :service         => 'nfs',
+        :service_ensure  => 'running',
+        :service_enable  => true,
       },
   }
   describe 'with default values for parameters' do
@@ -148,9 +160,9 @@ describe 'nfs' do
           if v[:service]
             it {
               should contain_service('nfs_service').with({
-                'ensure'    => 'running',
+                'ensure'    => v[:service_ensure],
                 'name'      => v[:service],
-                'enable'    => true,
+                'enable'    => v[:service_enable],
                 'subscribe' => service_subscribe,
               })
             }
@@ -167,9 +179,9 @@ describe 'nfs' do
           if v[:service]
             it {
               should contain_service('nfs_service').with({
-                'ensure'    => 'running',
+                'ensure'    => v[:service_ensure],
                 'name'      => v[:service],
-                'enable'    => true,
+                'enable'    => v[:service_enable],
                 'subscribe' => "Package[#{v[:packages]}]",
               })
             }
@@ -268,6 +280,64 @@ describe 'nfs' do
 
     it 'should fail' do
       expect { should raise_error(Puppet::Error) }
+    end
+  end
+
+  describe 'with server set to true' do
+    let :params do
+      {
+        :server => true,
+      }
+    end
+
+    ['6','7'].each do |ver|
+      context "and with default values for parameters on EL #{ver}" do
+        let :facts do
+          {
+            :osfamily                  => 'RedHat',
+            :operatingsystemmajrelease => ver,
+          }
+        end
+
+        it { should compile.with_all_deps }
+
+        it { should contain_class('nfs') }
+        it { should contain_class('nfs::idmap') }
+
+        it {
+          should contain_file('nfs_exports').with({
+            'ensure' => 'file',
+            'path'   => '/etc/exports',
+            'owner'  => 'root',
+            'group'  => 'root',
+            'mode'   => '0644',
+            'notify' => 'Exec[update_nfs_exports]',
+          })
+        }
+
+        it {
+          should contain_exec('update_nfs_exports').with({
+            'command'     => 'exportfs -ra',
+            'path'        => '/bin:/usr/bin:/sbin:/usr/sbin',
+            'refreshonly' => 'true',
+          })
+        }
+
+        if ver == '7'
+          it { should_not contain_service('nfs_service') }
+        else
+          it {
+            should contain_service('nfs_service').with({
+              'ensure'     => 'running',
+              'name'       => 'nfs',
+              'enable'     => 'true',
+              'hasstatus'  => 'true',
+              'hasrestart' => 'true',
+              'require'    => 'Exec[update_nfs_exports]',
+            })
+          }
+        end
+      end
     end
   end
 end

@@ -60,11 +60,11 @@ Hash of mounts to be mounted on system. See below.
 
 - *Default*: undef
 
-===
+server
+------
+Boolean to specify if the system is an NFS server.
 
-## Class `nfs::server` ##
-
-### Parameters ###
+- *Default*: false
 
 exports_path
 ------------
@@ -203,7 +203,7 @@ for a complete list.
 ## Example:
 Mount nfs.example.com:/vol1 on /mnt/vol1 and nfs.example.com:/vol2 on /mnt/vol2
 
-<pre>
+```yaml
 nfs::mounts:
   /mnt/vol1:
     device: nfs.example.com:/vol1
@@ -213,7 +213,30 @@ nfs::mounts:
     name: /mnt/vol2
     device: nfs.example.com:/vol2
     fstype: nfs
-</pre>
+```
+
+# Manage exports
+
+This module manages `/etc/exports` though does not manage its contents.
+Suggest using the `file_line` resource in your profile as demonstrated
+below.
+
+```puppet
+class profile::nfs_server {
+
+  include ::nfs
+
+  file_line { 'exports_home':
+    path => '/etc/exports',
+    line => '/home 192.168.42.0/24(sync,no_root_squash)',
+  }
+
+  file_line { 'exports_data':
+    path => '/etc/exports',
+    line => '/data 192.168.23.0/24(sync,no_root_squash,rw)',
+  }
+}
+```
 
 ## Creating Hiera data from existing system
 This module contains `ext/fstabnfs2yaml.rb`, which is a script that will

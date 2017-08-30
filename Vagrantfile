@@ -41,7 +41,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     server.vm.hostname = 'nfs-server.example.com'
     server.vm.network :private_network, ip: ENV['ALTERNATE_IP'] || '192.168.42.10'
     server.vm.provision :shell, :path => "vagrant/provision.sh"
-    server.vm.provision :shell, :path => "vagrant/export_vagranthome.sh"
     # EL7 acting as a server must specify this option
     server.vm.provision :shell, :inline => "echo 'nfs::idmap::idmapd_service_ensure: running' >> /etc/puppetlabs/code/environments/production/hieradata/common.yaml"
     server.vm.provision :shell, :inline => "puppet apply /vagrant/examples/server.pp"
@@ -54,7 +53,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     server.vm.hostname = 'nfs-server.example.com'
     server.vm.network :private_network, ip: ENV['ALTERNATE_IP'] || '192.168.42.10'
     server.vm.provision :shell, :path => "vagrant/provision.sh"
-    server.vm.provision :shell, :path => "vagrant/export_vagranthome.sh"
     server.vm.provision :shell, :inline => "puppet apply /vagrant/examples/server.pp"
     server.vm.provision :shell, :inline => "echo 'testing if /mnt/test/nfs_works exists'; test -f /mnt/test/nfs_works"
   end

@@ -3,10 +3,17 @@
 # Manages NFS
 #
 class nfs (
-  Boolean               $hiera_hash  = true,
-  String                $nfs_package = 'USE_DEFAULTS',
-  String                $nfs_service = 'USE_DEFAULTS',
-  Variant[Undef, Hash]  $mounts      = undef,
+  Boolean                $hiera_hash         = true,
+  String                 $nfs_package        = 'USE_DEFAULTS',
+  String                 $nfs_service        = 'USE_DEFAULTS',
+  String                 $nfs_service_ensure = 'USE_DEFAULTS',
+  String                 $nfs_service_enable = 'USE_DEFAULTS',
+  Variant[Undef, Hash]   $mounts             = undef,
+  Boolean                $server             = false,
+  Stdlib::Absolutepath   $exports_path       = '/etc/exports',
+  String                 $exports_owner      = 'root',
+  String                 $exports_group      = 'root',
+  Pattern[/^[0-7]{4}$/]  $exports_mode       = '0644',
 ) {
 
   case $::osfamily {
@@ -18,11 +25,15 @@ class nfs (
           require ::rpcbind
           include ::nfs::idmap
           $default_nfs_service = 'nfs'
+          $default_nfs_service_ensure = 'stopped'
+          $default_nfs_service_enable = false
         }
         '7': {
           require ::rpcbind
           include ::nfs::idmap
           $default_nfs_service = undef
+          $default_nfs_service_ensure = 'stopped'
+          $default_nfs_service_enable = false
         }
         default: {
           fail("nfs module only supports EL 6 and 7 and operatingsystemmajrelease was detected as <${::operatingsystemmajrelease}>.")
@@ -30,7 +41,13 @@ class nfs (
       }
     }
     'Solaris': {
+      if $server == true {
+        fail('This platform is not configured to be an NFS server.')
+      }
+
       $default_nfs_service = 'nfs/client'
+      $default_nfs_service_ensure = 'running'
+      $default_nfs_service_enable = true
 
       case $::kernelrelease {
         '5.10': {
@@ -55,6 +72,10 @@ class nfs (
       }
     }
     'Suse' : {
+      if $server == true {
+        fail('This platform is not configured to be an NFS server.')
+      }
+
       include ::nfs::idmap
       $default_idmap_service = 'rpcidmapd'
 
@@ -62,6 +83,8 @@ class nfs (
         '11','12': {
           $default_nfs_package = 'nfs-client'
           $default_nfs_service = 'nfs'
+          $default_nfs_service_ensure = 'running'
+          $default_nfs_service_enable = true
         }
         default: {
           fail("nfs module only supports Suse 11 and 12 and operatingsystemmajrelease was detected as <${::operatingsystemmajrelease}>.")
@@ -86,16 +109,60 @@ class nfs (
     $nfs_service_real = $nfs_service
   }
 
+  if $server == true {
+    $nfs_service_ensure_real = 'running'
+    $nfs_service_enable_real = true
+  } else {
+    if $nfs_service_ensure == 'USE_DEFAULTS' {
+      $nfs_service_ensure_real = $default_nfs_service_ensure
+    } else {
+      $nfs_service_ensure_real = $nfs_service_ensure
+    }
+
+    if $nfs_service_enable == 'USE_DEFAULTS' {
+      $nfs_service_enable_real = $default_nfs_service_enable
+    } else {
+      $nfs_service_enable_real = $nfs_service_enable
+    }
+  }
+
   package { $nfs_package_real:
     ensure => present,
   }
 
+  if $server == true {
+
+    file { 'nfs_exports':
+      ensure => file,
+      path   => $exports_path,
+      owner  => $exports_owner,
+      group  => $exports_group,
+      mode   => $exports_mode,
+      notify => Exec['update_nfs_exports'],
+    }
+
+    exec { 'update_nfs_exports':
+      command     => 'exportfs -ra',
+      path        => '/bin:/usr/bin:/sbin:/usr/sbin',
+      refreshonly => true,
+    }
+
+    $service_require = 'Exec[update_nfs_exports]'
+  } else {
+    $service_require = undef
+  }
+
   if $nfs_service_real {
+    # Some implmentations of NFS still need to run a service for the client
+    # even though the system is not an NFS server.
     service { 'nfs_service':
-      ensure    => running,
-      name      => $nfs_service_real,
-      enable    => true,
-      subscribe => Package[$nfs_package_real],
+      ensure     => $nfs_service_ensure_real,
+      name       => $nfs_service_real,
+      enable     => $nfs_service_enable_real,
+      hasstatus  => true,
+      hasrestart => true,
+      require    => $service_require,
+      subscribe  => Package[$nfs_package_real],
     }
   }
 
