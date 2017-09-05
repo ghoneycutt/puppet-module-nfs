@@ -1,6 +1,6 @@
 {
   "name": "ghoneycutt-nfs",
-  "version": "1.13.0",
+  "version": "2.0.0",
   "author": "ghoneycutt",
   "summary": "Manage NFS",
   "description": "Manage NFS for client and server, including idmap",
