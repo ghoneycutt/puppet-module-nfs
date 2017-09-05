@@ -1,5 +1,6 @@
 require 'spec_helper'
 describe 'nfs' do
+  let(:params) { { :hiera_hash => false } }
 
   describe 'on unsupported' do
     context 'osfamily' do
@@ -7,7 +8,7 @@ describe 'nfs' do
 
       it 'should fail' do
         expect {
-          should raise_error(Puppet::Error, /nfs module only supports osfamilies Debian, RedHat, Solaris and Suse, and <Unsupported> was detected\./)
+          should raise_error(Puppet::Error, /nfs module only supports osfamilies RedHat, Solaris and Suse, and <Unsupported> was detected\./)
         }
       end
     end
@@ -21,7 +22,7 @@ describe 'nfs' do
 
       it 'should fail' do
         expect {
-          should raise_error(Puppet::Error, /nfs module only supports EL 5, 6 and 7 and operatingsystemmajrelease was detected as <4>\./)
+          should raise_error(Puppet::Error, /nfs module only supports EL 6 and 7 and operatingsystemmajrelease was detected as <4>\./)
         }
       end
     end
@@ -29,27 +30,13 @@ describe 'nfs' do
     context 'version of Suse' do
       let :facts do
         { :osfamily          => 'Suse',
-          :lsbmajdistrelease => '9',
+          :operatingsystemmajrelease => '9',
         }
       end
 
       it 'should fail' do
         expect {
-          should raise_error(Puppet::Error, /nfs module only supports Suse 10, 11 and 12 and lsbmajdistrelease was detected as <9>\./)
-        }
-      end
-    end
-
-    context 'lsbdistid of osfamily Debian' do
-      let :facts do
-        { :osfamily  => 'Debian',
-          :lsbdistid => 'unsupported',
-        }
-      end
-
-      it 'should fail' do
-        expect {
-          should raise_error(Puppet::Error, /nfs module only supports lsbdistid Debian and Ubuntu of osfamily Debian\. Detected lsbdistid is <unsupported>\./)
+          should raise_error(Puppet::Error, /nfs module only supports Suse 11 and 12 and operatingsystemmajrelease was detected as <9>\./)
         }
       end
     end
@@ -70,31 +57,6 @@ describe 'nfs' do
   end
 
   platforms = {
-    'debian' =>
-      { :osfamily        => 'Debian',
-        :lsbdistid       => 'Debian',
-        :release         => '6',
-        :include_idmap   => false,
-        :include_rpcbind => true,
-        :packages        => 'nfs-common',
-        :service         => 'nfs-common',
-      },
-    'ubuntu' =>
-      { :osfamily        => 'Debian',
-        :lsbdistid       => 'Ubuntu',
-        :release         => '12',
-        :include_idmap   => false,
-        :include_rpcbind => true,
-        :packages        => 'nfs-common',
-      },
-    'el5' =>
-      { :osfamily        => 'RedHat',
-        :release         => '5',
-        :include_idmap   => true,
-        :include_rpcbind => false,
-        :packages        => 'nfs-utils',
-        :service         => 'nfs',
-      },
     'el6' =>
       { :osfamily        => 'RedHat',
         :release         => '6',
@@ -102,6 +64,8 @@ describe 'nfs' do
         :include_rpcbind => true,
         :packages        => 'nfs-utils',
         :service         => 'nfs',
+        :service_ensure  => 'stopped',
+        :service_enable  => false,
       },
     'el7' =>
       { :osfamily        => 'RedHat',
@@ -110,6 +74,8 @@ describe 'nfs' do
         :include_rpcbind => true,
         :packages        => 'nfs-utils',
         :service         => nil,
+        :service_ensure  => 'stopped',
+        :service_enable  => false,
       },
     'solaris10' =>
       { :osfamily        => 'Solaris',
@@ -118,6 +84,8 @@ describe 'nfs' do
         :include_rpcbind => false,
         :packages        => ['SUNWnfsckr','SUNWnfscr','SUNWnfscu','SUNWnfsskr','SUNWnfssr','SUNWnfssu'],
         :service         => 'nfs/client',
+        :service_ensure  => 'running',
+        :service_enable  => true,
       },
     'solaris11' =>
       { :osfamily        => 'Solaris',
@@ -126,14 +94,8 @@ describe 'nfs' do
         :include_rpcbind => false,
         :packages        => ['service/file-system/nfs','system/file-system/nfs'],
         :service         => 'nfs/client',
-      },
-    'suse10' =>
-      { :osfamily        => 'Suse',
-        :release         => '10',
-        :include_idmap   => true,
-        :include_rpcbind => false,
-        :packages        => 'nfs-utils',
-        :service         => 'nfs',
+        :service_ensure  => 'running',
+        :service_enable  => true,
       },
     'suse11' =>
       { :osfamily        => 'Suse',
@@ -142,6 +104,8 @@ describe 'nfs' do
         :include_rpcbind => false,
         :packages        => 'nfs-client',
         :service         => 'nfs',
+        :service_ensure  => 'running',
+        :service_enable  => true,
       },
     'suse12' =>
       { :osfamily        => 'Suse',
@@ -150,16 +114,16 @@ describe 'nfs' do
         :include_rpcbind => false,
         :packages        => 'nfs-client',
         :service         => 'nfs',
+        :service_ensure  => 'running',
+        :service_enable  => true,
       },
   }
   describe 'with default values for parameters' do
     platforms.sort.each do |k,v|
-      context "where osfamily is <#{v[:osfamily]}> lsbdistid is <#{v[:lsbdistid]}> kernelrelease is <#{v[:kernelrelease]}> and release is <#{v[:release]}>" do
+      context "where osfamily is <#{v[:osfamily]}> kernelrelease is <#{v[:kernelrelease]}> and release is <#{v[:release]}>" do
         let :facts do
           { :osfamily                  => v[:osfamily],
-            :lsbmajdistrelease         => v[:release],
             :operatingsystemmajrelease => v[:release],
-            :lsbdistid                 => v[:lsbdistid],
             :kernelrelease             => v[:kernelrelease],
           }
         end
@@ -196,9 +160,9 @@ describe 'nfs' do
           if v[:service]
             it {
               should contain_service('nfs_service').with({
-                'ensure'    => 'running',
+                'ensure'    => v[:service_ensure],
                 'name'      => v[:service],
-                'enable'    => true,
+                'enable'    => v[:service_enable],
                 'subscribe' => service_subscribe,
               })
             }
@@ -215,9 +179,9 @@ describe 'nfs' do
           if v[:service]
             it {
               should contain_service('nfs_service').with({
-                'ensure'    => 'running',
+                'ensure'    => v[:service_ensure],
                 'name'      => v[:service],
-                'enable'    => true,
+                'enable'    => v[:service_enable],
                 'subscribe' => "Package[#{v[:packages]}]",
               })
             }
@@ -243,7 +207,7 @@ describe 'nfs' do
       end
     end
 
-    ['true',true].each do |value|
+    [true].each do |value|
       context "as #{value}" do
         let(:params) { { :hiera_hash => value } }
         let(:facts) do
@@ -258,7 +222,7 @@ describe 'nfs' do
       end
     end
 
-    ['false',false].each do |value|
+    [false].each do |value|
       context "as #{value}" do
         let(:params) { { :hiera_hash => value } }
         let(:facts) do
@@ -282,13 +246,16 @@ describe 'nfs' do
     end
 
     let :params do
-      { :mounts => {
-        '/var/foo' => {
-          'ensure' => 'present',
-          'fstype' => 'nfs',
-          'device' => '/net/foo',
+      {
+        :hiera_hash => false,
+        :mounts     => {
+          '/var/foo' => {
+            'ensure' => 'present',
+            'fstype' => 'nfs',
+            'device' => '/net/foo',
+          }
         }
-      } }
+      }
     end
 
     it {
@@ -313,6 +280,64 @@ describe 'nfs' do
 
     it 'should fail' do
       expect { should raise_error(Puppet::Error) }
+    end
+  end
+
+  describe 'with server set to true' do
+    let :params do
+      {
+        :server => true,
+      }
+    end
+
+    ['6','7'].each do |ver|
+      context "and with default values for parameters on EL #{ver}" do
+        let :facts do
+          {
+            :osfamily                  => 'RedHat',
+            :operatingsystemmajrelease => ver,
+          }
+        end
+
+        it { should compile.with_all_deps }
+
+        it { should contain_class('nfs') }
+        it { should contain_class('nfs::idmap') }
+
+        it {
+          should contain_file('nfs_exports').with({
+            'ensure' => 'file',
+            'path'   => '/etc/exports',
+            'owner'  => 'root',
+            'group'  => 'root',
+            'mode'   => '0644',
+            'notify' => 'Exec[update_nfs_exports]',
+          })
+        }
+
+        it {
+          should contain_exec('update_nfs_exports').with({
+            'command'     => 'exportfs -ra',
+            'path'        => '/bin:/usr/bin:/sbin:/usr/sbin',
+            'refreshonly' => 'true',
+          })
+        }
+
+        if ver == '7'
+          it { should_not contain_service('nfs_service') }
+        else
+          it {
+            should contain_service('nfs_service').with({
+              'ensure'     => 'running',
+              'name'       => 'nfs',
+              'enable'     => 'true',
+              'hasstatus'  => 'true',
+              'hasrestart' => 'true',
+              'require'    => 'Exec[update_nfs_exports]',
+            })
+          }
+        end
+      end
     end
   end
 end

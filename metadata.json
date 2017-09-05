@@ -9,25 +9,18 @@
   "project_page": "https://github.com/ghoneycutt/puppet-module-nfs",
   "issues_url": "https://github.com/ghoneycutt/puppet-module-nfs/issues",
   "requirements": [
-    {"name":"puppet","version_requirement":">= 3.0.0 < 5.0.0"}
+    {"name":"puppet","version_requirement":">= 4.0.0 < 6.0.0"}
   ],
   "dependencies": [
     {"name":"ghoneycutt/common","version_requirement":">= 1.7.0 < 2.0.0"},
-    {"name":"ghoneycutt/rpcbind","version_requirement":">= 1.0.0 < 2.0.0"},
-    {"name":"ghoneycutt/types","version_requirement":">= 1.11.0 < 2.0.0"},
-    {"name":"puppetlabs/stdlib","version_requirement":">= 4.6.0 < 6.0.0"}
+    {"name":"ghoneycutt/rpcbind","version_requirement":">= 1.7.0 < 2.0.0"},
+    {"name":"ghoneycutt/types","version_requirement":">= 1.12.0 < 2.0.0"},
+    {"name":"puppetlabs/stdlib","version_requirement":">= 4.16.0 < 6.0.0"}
   ],
   "operatingsystem_support": [
     {
-      "operatingsystem": "Debian",
-      "operatingsystemrelease": [
-        "6"
-      ]
-    },
-    {
       "operatingsystem": "RedHat",
       "operatingsystemrelease": [
-        "5",
         "6",
         "7"
       ]
@@ -35,7 +28,6 @@
     {
       "operatingsystem": "CentOS",
       "operatingsystemrelease": [
-        "5",
         "6",
         "7"
       ]
@@ -43,15 +35,15 @@
     {
       "operatingsystem": "OracleLinux",
       "operatingsystemrelease": [
-        "5",
-        "6"
+        "6",
+        "7"
       ]
     },
     {
       "operatingsystem": "Scientific",
       "operatingsystemrelease": [
-        "5",
-        "6"
+        "6",
+        "7"
       ]
     },
     {
@@ -62,15 +54,17 @@
       ]
     },
     {
-      "operatingsystem": "SLES"
-    },
-    {
-      "operatingsystem": "SLED"
-    },
-    {
-      "operatingsystem": "Ubuntu",
+      "operatingsystem": "SLES",
       "operatingsystemrelease": [
-        "12.04"
+        "11",
+        "12"
+      ]
+    },
+    {
+      "operatingsystem": "SLED",
+      "operatingsystemrelease": [
+        "11",
+        "12"
       ]
     }
   ]
