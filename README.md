@@ -30,6 +30,13 @@ v4 and v5 using the ruby versions that are shipped with each. See
  * Suse 11    (client only)
  * Suse 12    (client only)
 
+### Suse notes
+
+If using Suse, there is a known issue regarding reverse path filtering
+which can be solved through kernel tuning.
+
+[http://www.novell.com/support/kb/doc.php?id=7007649](http://www.novell.com/support/kb/doc.php?id=7007649)
+
 ===
 
 # Parameters #
