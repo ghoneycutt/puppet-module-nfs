@@ -62,7 +62,7 @@ describe 'nfs' do
         :release         => '6',
         :include_idmap   => true,
         :include_rpcbind => true,
-        :packages        => 'nfs-utils',
+        :packages        => ['nfs-utils',],
         :service         => 'nfs',
         :service_ensure  => 'stopped',
         :service_enable  => false,
@@ -72,7 +72,7 @@ describe 'nfs' do
         :release         => '7',
         :include_idmap   => true,
         :include_rpcbind => true,
-        :packages        => 'nfs-utils',
+        :packages        => ['nfs-utils',],
         :service         => nil,
         :service_ensure  => 'stopped',
         :service_enable  => false,
@@ -102,7 +102,7 @@ describe 'nfs' do
         :release         => '11',
         :include_idmap   => true,
         :include_rpcbind => false,
-        :packages        => 'nfs-client',
+        :packages        => ['nfs-client',],
         :service         => 'nfs',
         :service_ensure  => 'running',
         :service_enable  => true,
@@ -112,7 +112,7 @@ describe 'nfs' do
         :release         => '12',
         :include_idmap   => true,
         :include_rpcbind => false,
-        :packages        => 'nfs-client',
+        :packages        => ['nfs-client',],
         :service         => 'nfs',
         :service_ensure  => 'running',
         :service_enable  => true,
@@ -146,48 +146,27 @@ describe 'nfs' do
           it { should_not contain_class('rpcbind') }
         end
 
-        if v[:packages].class == Array
-          v[:packages].each do |pkg|
-            it {
-              should contain_package(pkg).with({
-                'ensure' => 'present',
-              })
-            }
-            # Building the array of Packages for service's subscribe attribute.
-            service_subscribe << "Package[#{pkg}]"
-          end
-
-          if v[:service]
-            it {
-              should contain_service('nfs_service').with({
-                'ensure'    => v[:service_ensure],
-                'name'      => v[:service],
-                'enable'    => v[:service_enable],
-                'subscribe' => service_subscribe,
-              })
-            }
-          else
-            it { should_not contain_service('nfs_service') }
-          end
-        else
+        v[:packages].each do |pkg|
           it {
-            should contain_package(v[:packages]).with({
+            should contain_package(pkg).with({
               'ensure' => 'present',
             })
           }
+          # Building the array of Packages for service's subscribe attribute.
+          service_subscribe << "Package[#{pkg}]"
+        end
 
-          if v[:service]
-            it {
-              should contain_service('nfs_service').with({
-                'ensure'    => v[:service_ensure],
-                'name'      => v[:service],
-                'enable'    => v[:service_enable],
-                'subscribe' => "Package[#{v[:packages]}]",
-              })
-            }
-          else
-            it { should_not contain_service('nfs_service') }
-          end
+        if v[:service]
+          it {
+            should contain_service('nfs_service').with({
+              'ensure'    => v[:service_ensure],
+              'name'      => v[:service],
+              'enable'    => v[:service_enable],
+              'subscribe' => service_subscribe,
+            })
+          }
+        else
+          it { should_not contain_service('nfs_service') }
         end
       end
     end
