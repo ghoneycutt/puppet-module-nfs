@@ -4,7 +4,7 @@
 #
 class nfs (
   Boolean                $hiera_hash         = true,
-  String                 $nfs_package        = 'USE_DEFAULTS',
+  Variant[Array, String] $nfs_package        = 'USE_DEFAULTS',
   String                 $nfs_service        = 'USE_DEFAULTS',
   String                 $nfs_service_ensure = 'USE_DEFAULTS',
   String                 $nfs_service_enable = 'USE_DEFAULTS',
@@ -18,7 +18,7 @@ class nfs (
 
   case $::osfamily {
     'RedHat': {
-      $default_nfs_package = 'nfs-utils'
+      $default_nfs_package = [ 'nfs-utils' ]
 
       case $::operatingsystemmajrelease {
         '6': {
@@ -81,7 +81,7 @@ class nfs (
 
       case $::operatingsystemmajrelease {
         '11','12': {
-          $default_nfs_package = 'nfs-client'
+          $default_nfs_package = [ 'nfs-client' ]
           $default_nfs_service = 'nfs'
           $default_nfs_service_ensure = 'running'
           $default_nfs_service_enable = true
@@ -98,9 +98,9 @@ class nfs (
   }
 
   if $nfs_package == 'USE_DEFAULTS' {
-    $nfs_package_real = $default_nfs_package
+    $nfs_package_array = $default_nfs_package
   } else {
-    $nfs_package_real = $nfs_package
+    $nfs_package_array = any2array($nfs_package)
   }
 
   if $nfs_service == 'USE_DEFAULTS' {
@@ -126,7 +126,7 @@ class nfs (
     }
   }
 
-  package { $nfs_package_real:
+  package { $nfs_package_array:
     ensure => present,
   }
 
@@ -162,7 +162,7 @@ class nfs (
       hasstatus  => true,
       hasrestart => true,
       require    => $service_require,
-      subscribe  => Package[$nfs_package_real],
+      subscribe  => Package[$nfs_package_array],
     }
   }
 
