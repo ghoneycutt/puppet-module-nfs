@@ -1,0 +1,6 @@
+---
+nfs::mounts:
+  '/from/hiera/test':
+    ensure: 'present'
+    fstype: 'nfs'
+    device: 'test:/from/hiera/test'
