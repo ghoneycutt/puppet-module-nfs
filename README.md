@@ -51,7 +51,7 @@ levels of the hierarchy and having them all included in the catalog.
 
 nfs_package
 -----------
-Name of the NFS package
+Name of the NFS package. May be a string or an array.
 
 - *Default*: Uses system defaults as specified in module
 
