@@ -1,7 +1,18 @@
 # Change Log
 
-## [v2.0.0](https://github.com/ghoneycutt/puppet-module-nfs/tree/v2.0.0)
+## [Unreleased](https://github.com/ghoneycutt/puppet-module-nfs/tree/HEAD)
 
+[Full Changelog](https://github.com/ghoneycutt/puppet-module-nfs/compare/v2.0.0...HEAD)
+
+**Closed issues:**
+
+- Get spec testing up to our standards [\#79](https://github.com/ghoneycutt/puppet-module-nfs/issues/79)
+
+**Merged pull requests:**
+
+- Update spec tests \(RTM\) [\#81](https://github.com/ghoneycutt/puppet-module-nfs/pull/81) ([Phil-Friderici](https://github.com/Phil-Friderici))
+
+## [v2.0.0](https://github.com/ghoneycutt/puppet-module-nfs/tree/v2.0.0) (2017-09-05)
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-nfs/compare/v1.13.0...v2.0.0)
 
 **Closed issues:**
@@ -128,7 +139,7 @@
 
 - Prep for 1 7 0 release [\#39](https://github.com/ghoneycutt/puppet-module-nfs/pull/39) ([ghoneycutt](https://github.com/ghoneycutt))
 - Solaris11 [\#38](https://github.com/ghoneycutt/puppet-module-nfs/pull/38) ([ghoneycutt](https://github.com/ghoneycutt))
-- Typos fixed [\#34](https://github.com/ghoneycutt/puppet-module-nfs/pull/34) ([seanscottking](https://github.com/seanscottking))
+- Typos fixed [\#34](https://github.com/ghoneycutt/puppet-module-nfs/pull/34) ([solsglasses](https://github.com/solsglasses))
 
 ## [v1.6.3](https://github.com/ghoneycutt/puppet-module-nfs/tree/v1.6.3) (2014-02-06)
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-nfs/compare/v1.6.2...v1.6.3)
