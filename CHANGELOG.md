@@ -2,7 +2,14 @@
 
 ## [Unreleased](https://github.com/ghoneycutt/puppet-module-nfs/tree/HEAD)
 
-[Full Changelog](https://github.com/ghoneycutt/puppet-module-nfs/compare/v2.0.0...HEAD)
+[Full Changelog](https://github.com/ghoneycutt/puppet-module-nfs/compare/v2.1.0...HEAD)
+
+**Merged pull requests:**
+
+- Add support for Puppet 6 [\#82](https://github.com/ghoneycutt/puppet-module-nfs/pull/82) ([Phil-Friderici](https://github.com/Phil-Friderici))
+
+## [v2.1.0](https://github.com/ghoneycutt/puppet-module-nfs/tree/v2.1.0) (2019-01-04)
+[Full Changelog](https://github.com/ghoneycutt/puppet-module-nfs/compare/v2.0.0...v2.1.0)
 
 **Closed issues:**
 
