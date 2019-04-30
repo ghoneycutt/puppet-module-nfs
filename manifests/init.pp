@@ -91,6 +91,21 @@ class nfs (
         }
       }
     }
+    'Debian' : {
+      $default_nfs_package = [ 'nfs-common' ]
+
+      case $::operatingsystemmajrelease {
+        '18.04':{
+          include ::nfs::idmap
+          $default_nfs_service = 'nfs-common'
+          $default_nfs_service_ensure = 'running'
+          $default_nfs_service_enable = true
+            }
+        default: {
+          fail("nfs module only supports Ubuntu 18.04 and operatingsystemmajrelease was detected as <${::operatingsystemmajrelease}>.")
+        }
+          }
+        }
 
     default: {
       fail("nfs module only supports osfamilies RedHat, Solaris and Suse, and <${::osfamily}> was detected.")
