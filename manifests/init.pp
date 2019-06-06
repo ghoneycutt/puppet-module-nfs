@@ -92,15 +92,23 @@ class nfs (
       }
     }
     'Debian' : {
-      $default_nfs_package = [ 'nfs-common' ]
-
       case $::operatingsystemmajrelease {
         '18.04':{
-          include ::nfs::idmap
-          $default_nfs_service = 'nfs-common'
-          $default_nfs_service_ensure = 'running'
-          $default_nfs_service_enable = true
-            }
+          # NFS server 
+          if $server == true {
+            include ::nfs::idmap
+            $default_nfs_package = ['nfs-kernel-server']
+            $default_nfs_service = 'nfs-server'
+            $default_nfs_service_ensure = 'running'
+            $default_nfs_service_enable = true
+          }
+          # NFS client 
+          if $server == false {
+            $default_nfs_package = ['nfs-common']
+            $default_nfs_server = undef
+            $default_nfs_service_enable = 'stopped'
+            $default_nfs_service_ensure = false
+          }
         default: {
           fail("nfs module only supports Ubuntu 18.04 and operatingsystemmajrelease was detected as <${::operatingsystemmajrelease}>.")
         }
