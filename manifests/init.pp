@@ -114,7 +114,7 @@ class nfs (
         }
           }
         }
-
+    }
     default: {
       fail("nfs module only supports osfamilies RedHat, Solaris and Suse, and <${::osfamily}> was detected.")
     }
