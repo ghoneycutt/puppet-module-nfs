@@ -15,5 +15,3 @@ fixtures:
     types:
       repo: 'https://github.com/ghoneycutt/puppet-module-types.git'
       ref: 'v1.12.0'
-  symlinks:
-    nfs: "#{source_dir}"
