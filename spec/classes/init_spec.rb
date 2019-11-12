@@ -23,6 +23,17 @@ describe 'nfs' do
       :service_enable  => false,
       :server          => true,
     },
+    'el8' => {
+      :osfamily        => 'RedHat',
+      :release         => '8',
+      :include_idmap   => true,
+      :include_rpcbind => true,
+      :packages        => ['nfs-utils',],
+      :service         => nil,
+      :service_ensure  => 'stopped',
+      :service_enable  => false,
+      :server          => true,
+    },
     'solaris10' => {
       :osfamily        => 'Solaris',
       :kernelrelease   => '5.10',
@@ -71,7 +82,7 @@ describe 'nfs' do
 
   unsupported_platforms = {
     'el5'      => { :osfamily => 'RedHat',  :release => '5' },
-    'el8'      => { :osfamily => 'RedHat',  :release => '8' },
+    'el9'      => { :osfamily => 'RedHat',  :release => '9' },
     'suse9'    => { :osfamily => 'Suse',    :release => '9' },
     'suse13'   => { :osfamily => 'Suse',    :release => '13' },
     'solaris9' => { :osfamily => 'Solaris', :kernelrelease => '5.9' },

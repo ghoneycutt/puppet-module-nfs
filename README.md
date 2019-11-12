@@ -25,6 +25,7 @@ v4, v5 and v6 using the ruby versions that are shipped with each. See
 
  * EL 6
  * EL 7
+ * EL 8
  * Solaris 10 (client only)
  * Solaris 11 (client only)
  * Suse 11    (client only)
