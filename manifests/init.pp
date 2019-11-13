@@ -28,7 +28,7 @@ class nfs (
           $default_nfs_service_ensure = 'stopped'
           $default_nfs_service_enable = false
         }
-        '7': {
+        /7|8/: {
           require ::rpcbind
           include ::nfs::idmap
           $default_nfs_service = undef
@@ -36,7 +36,7 @@ class nfs (
           $default_nfs_service_enable = false
         }
         default: {
-          fail("nfs module only supports EL 6 and 7 and operatingsystemmajrelease was detected as <${::operatingsystemmajrelease}>.")
+          fail("nfs module only supports EL 6, 7 and 8 and operatingsystemmajrelease was detected as <${::operatingsystemmajrelease}>.")
         }
       }
     }
