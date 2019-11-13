@@ -6,6 +6,7 @@ else
   gem 'puppet', :require => false
 end
 
+gem 'rake', '~> 12.3' if RUBY_VERSION < '2.2'
 gem 'facter', '>= 2.2.0'
 gem 'rspec-puppet', '~> 2.0'
 gem 'puppet-lint', '~> 2.0'
