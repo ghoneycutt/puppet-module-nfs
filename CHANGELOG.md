@@ -1,14 +1,23 @@
-# Change Log
+# Changelog
 
-## [Unreleased](https://github.com/ghoneycutt/puppet-module-nfs/tree/HEAD)
+## [v2.3.0](https://github.com/ghoneycutt/puppet-module-nfs/tree/v2.3.0) (2019-11-13)
 
-[Full Changelog](https://github.com/ghoneycutt/puppet-module-nfs/compare/v2.1.0...HEAD)
+[Full Changelog](https://github.com/ghoneycutt/puppet-module-nfs/compare/v2.2.0...v2.3.0)
+
+**Merged pull requests:**
+
+- Support EL 8 [\#85](https://github.com/ghoneycutt/puppet-module-nfs/pull/85) ([anders-larsson](https://github.com/anders-larsson))
+
+## [v2.2.0](https://github.com/ghoneycutt/puppet-module-nfs/tree/v2.2.0) (2019-01-04)
+
+[Full Changelog](https://github.com/ghoneycutt/puppet-module-nfs/compare/v2.1.0...v2.2.0)
 
 **Merged pull requests:**
 
 - Add support for Puppet 6 [\#82](https://github.com/ghoneycutt/puppet-module-nfs/pull/82) ([Phil-Friderici](https://github.com/Phil-Friderici))
 
 ## [v2.1.0](https://github.com/ghoneycutt/puppet-module-nfs/tree/v2.1.0) (2019-01-04)
+
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-nfs/compare/v2.0.0...v2.1.0)
 
 **Closed issues:**
@@ -20,6 +29,7 @@
 - Update spec tests \(RTM\) [\#81](https://github.com/ghoneycutt/puppet-module-nfs/pull/81) ([Phil-Friderici](https://github.com/Phil-Friderici))
 
 ## [v2.0.0](https://github.com/ghoneycutt/puppet-module-nfs/tree/v2.0.0) (2017-09-05)
+
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-nfs/compare/v1.13.0...v2.0.0)
 
 **Closed issues:**
@@ -43,6 +53,7 @@
 - V2 [\#78](https://github.com/ghoneycutt/puppet-module-nfs/pull/78) ([ghoneycutt](https://github.com/ghoneycutt))
 
 ## [v1.13.0](https://github.com/ghoneycutt/puppet-module-nfs/tree/v1.13.0) (2017-02-27)
+
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-nfs/compare/v1.12.1...v1.13.0)
 
 **Merged pull requests:**
@@ -50,6 +61,7 @@
 - Support Puppet \>= 4.9 [\#74](https://github.com/ghoneycutt/puppet-module-nfs/pull/74) ([Phil-Friderici](https://github.com/Phil-Friderici))
 
 ## [v1.12.1](https://github.com/ghoneycutt/puppet-module-nfs/tree/v1.12.1) (2016-11-18)
+
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-nfs/compare/v1.12.0...v1.12.1)
 
 **Merged pull requests:**
@@ -57,6 +69,7 @@
 - Fix deps [\#72](https://github.com/ghoneycutt/puppet-module-nfs/pull/72) ([ghoneycutt](https://github.com/ghoneycutt))
 
 ## [v1.12.0](https://github.com/ghoneycutt/puppet-module-nfs/tree/v1.12.0) (2016-08-31)
+
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-nfs/compare/v1.11.3...v1.12.0)
 
 **Merged pull requests:**
@@ -64,6 +77,7 @@
 - Add support for Ruby v2.3.1 [\#71](https://github.com/ghoneycutt/puppet-module-nfs/pull/71) ([ghoneycutt](https://github.com/ghoneycutt))
 
 ## [v1.11.3](https://github.com/ghoneycutt/puppet-module-nfs/tree/v1.11.3) (2016-05-24)
+
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-nfs/compare/v1.11.2...v1.11.3)
 
 **Merged pull requests:**
@@ -71,9 +85,11 @@
 - Support Puppet 4.5 [\#70](https://github.com/ghoneycutt/puppet-module-nfs/pull/70) ([Phil-Friderici](https://github.com/Phil-Friderici))
 
 ## [v1.11.2](https://github.com/ghoneycutt/puppet-module-nfs/tree/v1.11.2) (2015-12-15)
+
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-nfs/compare/v1.11.1...v1.11.2)
 
 ## [v1.11.1](https://github.com/ghoneycutt/puppet-module-nfs/tree/v1.11.1) (2015-12-15)
+
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-nfs/compare/v1.11.0...v1.11.1)
 
 **Closed issues:**
@@ -85,6 +101,7 @@
 - Puppet v430 [\#64](https://github.com/ghoneycutt/puppet-module-nfs/pull/64) ([ghoneycutt](https://github.com/ghoneycutt))
 
 ## [v1.11.0](https://github.com/ghoneycutt/puppet-module-nfs/tree/v1.11.0) (2015-09-18)
+
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-nfs/compare/v1.10.0...v1.11.0)
 
 **Closed issues:**
@@ -99,8 +116,10 @@
 - Add Suse 12 support [\#62](https://github.com/ghoneycutt/puppet-module-nfs/pull/62) ([jwennerberg](https://github.com/jwennerberg))
 - Fix Travis-ci matrix so that each feature release is tested [\#60](https://github.com/ghoneycutt/puppet-module-nfs/pull/60) ([ghoneycutt](https://github.com/ghoneycutt))
 - Test against latest bugfix of each feature release [\#57](https://github.com/ghoneycutt/puppet-module-nfs/pull/57) ([ghoneycutt](https://github.com/ghoneycutt))
+- Remove lsb [\#51](https://github.com/ghoneycutt/puppet-module-nfs/pull/51) ([rnelson0](https://github.com/rnelson0))
 
 ## [v1.10.0](https://github.com/ghoneycutt/puppet-module-nfs/tree/v1.10.0) (2015-05-25)
+
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-nfs/compare/v1.9.0...v1.10.0)
 
 **Merged pull requests:**
@@ -108,13 +127,11 @@
 - WIP [\#54](https://github.com/ghoneycutt/puppet-module-nfs/pull/54) ([ghoneycutt](https://github.com/ghoneycutt))
 
 ## [v1.9.0](https://github.com/ghoneycutt/puppet-module-nfs/tree/v1.9.0) (2015-05-20)
+
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-nfs/compare/v1.8.1...v1.9.0)
 
-**Merged pull requests:**
-
-- Remove lsb [\#51](https://github.com/ghoneycutt/puppet-module-nfs/pull/51) ([rnelson0](https://github.com/rnelson0))
-
 ## [v1.8.1](https://github.com/ghoneycutt/puppet-module-nfs/tree/v1.8.1) (2015-05-19)
+
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-nfs/compare/v1.8.0...v1.8.1)
 
 **Merged pull requests:**
@@ -123,6 +140,7 @@
 - Update travis config [\#47](https://github.com/ghoneycutt/puppet-module-nfs/pull/47) ([ghoneycutt](https://github.com/ghoneycutt))
 
 ## [v1.8.0](https://github.com/ghoneycutt/puppet-module-nfs/tree/v1.8.0) (2015-02-16)
+
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-nfs/compare/v1.7.0...v1.8.0)
 
 **Closed issues:**
@@ -134,6 +152,7 @@
 - Add support for EL7 [\#44](https://github.com/ghoneycutt/puppet-module-nfs/pull/44) ([ghoneycutt](https://github.com/ghoneycutt))
 
 ## [v1.7.0](https://github.com/ghoneycutt/puppet-module-nfs/tree/v1.7.0) (2014-05-28)
+
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-nfs/compare/v1.6.3...v1.7.0)
 
 **Closed issues:**
@@ -149,6 +168,7 @@
 - Typos fixed [\#34](https://github.com/ghoneycutt/puppet-module-nfs/pull/34) ([solsglasses](https://github.com/solsglasses))
 
 ## [v1.6.3](https://github.com/ghoneycutt/puppet-module-nfs/tree/v1.6.3) (2014-02-06)
+
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-nfs/compare/v1.6.2...v1.6.3)
 
 **Merged pull requests:**
@@ -156,6 +176,7 @@
 - Update README with idmap and server information [\#29](https://github.com/ghoneycutt/puppet-module-nfs/pull/29) ([kentjohansson](https://github.com/kentjohansson))
 
 ## [v1.6.2](https://github.com/ghoneycutt/puppet-module-nfs/tree/v1.6.2) (2014-02-01)
+
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-nfs/compare/v1.6.1...v1.6.2)
 
 **Merged pull requests:**
@@ -163,6 +184,7 @@
 - Support Puppet v3.4 and Ruby v2.0.0 [\#28](https://github.com/ghoneycutt/puppet-module-nfs/pull/28) ([ghoneycutt](https://github.com/ghoneycutt))
 
 ## [v1.6.1](https://github.com/ghoneycutt/puppet-module-nfs/tree/v1.6.1) (2014-01-28)
+
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-nfs/compare/v1.6.0...v1.6.1)
 
 **Merged pull requests:**
@@ -173,6 +195,7 @@
 - Remove Travis work around for ruby v1.8.7 [\#24](https://github.com/ghoneycutt/puppet-module-nfs/pull/24) ([ghoneycutt](https://github.com/ghoneycutt))
 
 ## [v1.6.0](https://github.com/ghoneycutt/puppet-module-nfs/tree/v1.6.0) (2014-01-17)
+
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-nfs/compare/v1.5.0...v1.6.0)
 
 **Merged pull requests:**
@@ -180,6 +203,7 @@
 - Support suse 10 [\#23](https://github.com/ghoneycutt/puppet-module-nfs/pull/23) ([ghoneycutt](https://github.com/ghoneycutt))
 
 ## [v1.5.0](https://github.com/ghoneycutt/puppet-module-nfs/tree/v1.5.0) (2014-01-14)
+
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-nfs/compare/v1.4.0...v1.5.0)
 
 **Merged pull requests:**
@@ -188,6 +212,7 @@
 - Rakefile to conform with other modules [\#20](https://github.com/ghoneycutt/puppet-module-nfs/pull/20) ([ghoneycutt](https://github.com/ghoneycutt))
 
 ## [v1.4.0](https://github.com/ghoneycutt/puppet-module-nfs/tree/v1.4.0) (2013-12-21)
+
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-nfs/compare/v1.3.0...v1.4.0)
 
 **Merged pull requests:**
@@ -195,6 +220,7 @@
 - Support solaris suse ubuntu [\#19](https://github.com/ghoneycutt/puppet-module-nfs/pull/19) ([ghoneycutt](https://github.com/ghoneycutt))
 
 ## [v1.3.0](https://github.com/ghoneycutt/puppet-module-nfs/tree/v1.3.0) (2013-11-25)
+
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-nfs/compare/v1.2.0...v1.3.0)
 
 **Merged pull requests:**
@@ -202,6 +228,7 @@
 - Refactor nfs mounts [\#16](https://github.com/ghoneycutt/puppet-module-nfs/pull/16) ([ghoneycutt](https://github.com/ghoneycutt))
 
 ## [v1.2.0](https://github.com/ghoneycutt/puppet-module-nfs/tree/v1.2.0) (2013-11-22)
+
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-nfs/compare/v1.1.0...v1.2.0)
 
 **Merged pull requests:**
@@ -209,6 +236,9 @@
 - v1.2.0 - Support Debian 6 as nfs client [\#15](https://github.com/ghoneycutt/puppet-module-nfs/pull/15) ([ghoneycutt](https://github.com/ghoneycutt))
 
 ## [v1.1.0](https://github.com/ghoneycutt/puppet-module-nfs/tree/v1.1.0) (2013-09-27)
+
+[Full Changelog](https://github.com/ghoneycutt/puppet-module-nfs/compare/3268e6ef85402b7fd10ef9290e78b0344ea613d7...v1.1.0)
+
 **Closed issues:**
 
 - include rpcbind instead of managing the rpcbind service [\#6](https://github.com/ghoneycutt/puppet-module-nfs/issues/6)
@@ -223,4 +253,4 @@
 
 
 
-\* *This Change Log was automatically generated by [github_changelog_generator](https://github.com/skywinder/Github-Changelog-Generator)*
+\* *This Changelog was automatically generated by [github_changelog_generator](https://github.com/github-changelog-generator/github-changelog-generator)*
