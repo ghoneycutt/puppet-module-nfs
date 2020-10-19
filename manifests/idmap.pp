@@ -71,8 +71,23 @@ class nfs::idmap (
       $default_pipefs_directory = '/var/lib/nfs/rpc_pipefs'
       $default_idmapd_service_ensure = undef
     }
+    'Debian' : {
+      $default_pipepfs_directory = undef
+
+      case $::operatingsystemmajrelease {
+        '18.04': {
+          $default_idmap_service = 'nfs-idmapd'
+          $default_idmap_package = 'libnfsidmap2'
+          $default_idmapd_service_ensure = 'stopped'
+        }
+        default: {
+          fail("idmapd only support Ubuntu 18.04. Detected operatingsystemmajrelease is ${::operatingsystemmajrelease}.")
+        }
+          }
+
+        }
     default: {
-      fail( "idmap only supports RedHat and Suse osfamilies, not ${::osfamily}" )
+      fail( "idmap only supports RedHat and Suse osfamilies and Ubuntu 18.04, not ${::osfamily}" )
     }
   }
 
