@@ -28,7 +28,7 @@ class nfs (
           $default_nfs_service_ensure = 'stopped'
           $default_nfs_service_enable = false
         }
-        /7|8/: {
+        /7|8|9/: {
           require ::rpcbind
           include ::nfs::idmap
           $default_nfs_service = undef
