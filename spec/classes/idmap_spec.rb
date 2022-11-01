@@ -25,6 +25,14 @@ describe 'nfs::idmap' do
       :idmap_service_name    => 'nfs-idmapd',
       :pipefs_directory      => nil,
     },
+    'el9' => {
+      :osfamily              => 'RedHat',
+      :release               => '9',
+      :idmapd_service_ensure => 'stopped',
+      :idmap_package         => 'libnfsidmap',
+      :idmap_service_name    => 'nfs-idmapd',
+      :pipefs_directory      => nil,
+    },
     'suse' => {
       :osfamily              => 'Suse',
       :release               => '12',
@@ -37,7 +45,7 @@ describe 'nfs::idmap' do
 
   unsupported_platforms = {
     'el5'      => { :osfamily => 'RedHat',  :release => '5' },
-    'el9'      => { :osfamily => 'RedHat',  :release => '9' },
+    'el10'     => { :osfamily => 'RedHat',  :release => '10' },
     'solaris9' => { :osfamily => 'Solaris', :kernelrelease => '5.9' },
     'weirdos'  => { :osfamily => 'WeirdOS', :release => '2.4.2' },
   }
