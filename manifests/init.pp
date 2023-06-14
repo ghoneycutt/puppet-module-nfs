@@ -116,6 +116,7 @@ class nfs (
     if $nfs_service_ensure == 'USE_DEFAULTS' {
       $nfs_service_ensure_real = $default_nfs_service_ensure
     } else {
+      validate_re($nfs_service_ensure, '^(stopped)|(running)$', "for nfs::nfs_service_ensure valid values are stopped, running")
       $nfs_service_ensure_real = $nfs_service_ensure
     }
 

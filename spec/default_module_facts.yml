@@ -1,0 +1,7 @@
+# Facts specified here will override the values provided by rspec-puppet-facts.
+---
+environment:               'rp_env'
+domain:                    'example.local'
+fqdn:                      'nfs.example.local'
+osfamily:                  'RedHat'
+operatingsystemmajrelease: '6'

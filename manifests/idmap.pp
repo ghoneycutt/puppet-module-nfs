@@ -91,6 +91,7 @@ class nfs::idmap (
   if $idmapd_service_ensure == 'USE_DEFAULTS' {
     $idmapd_service_ensure_real = $default_idmapd_service_ensure
   } else {
+    validate_re($idmapd_service_ensure, '^(stopped)|(running)|(true)|(false)$', "for nfs::idmapd::idmapd_service_ensure valid values are stopped, running, true and false")
     $idmapd_service_ensure_real = $idmapd_service_ensure
   }
 
