@@ -46,9 +46,13 @@ describe 'nfs::idmap' do
     describe "on osfamily <#{v[:osfamily]}> when operatingsystemmajrelease is <#{v[:release]}>" do
       let :facts do
         {
-          osfamily:                  v[:osfamily],
-          operatingsystemmajrelease: v[:release],
-          kernelrelease:             v[:kernelrelease],
+          os: {
+            family:      v[:osfamily],
+            release: {
+              major:     v[:release],
+            },
+          },
+          kernelrelease: v[:kernelrelease],
         }
       end
 
@@ -123,7 +127,16 @@ describe 'nfs::idmap' do
   # RedHat only service parameters
   ['RedHat', 'Suse'].each do |os|
     describe "on #{os}" do
-      let(:facts) { { osfamily: os } }
+      let :facts do
+        {
+          os: {
+            family:  os,
+            release: {
+              major: '8', # only be used on RedHat
+            },
+          },
+        }
+      end
 
       context 'with idmapd_service_name specified as valid string <idmapd-test>' do
         let(:params) { { idmapd_service_name: 'idmapd-test' } }
@@ -253,9 +266,13 @@ describe 'nfs::idmap' do
     describe "on unsupported osfamily <#{v[:osfamily]}> when #{v[:release].nil? ? 'kernel' : 'operatingsystemmaj'}release is <#{v[:release]}#{v[:kernelrelease]}>" do
       let :facts do
         {
-          osfamily:                  v[:osfamily],
-          operatingsystemmajrelease: v[:release],
-          kernelrelease:             v[:kernelrelease],
+          os: {
+            family:      v[:osfamily],
+            release: {
+              major:     v[:release],
+            },
+          },
+          kernelrelease: v[:kernelrelease],
         }
       end
 

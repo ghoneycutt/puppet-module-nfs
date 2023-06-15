@@ -1,7 +1,16 @@
 # Facts specified here will override the values provided by rspec-puppet-facts.
 ---
+# needed for dependency modules only, remove after updating
 environment:               'rp_env'
 domain:                    'example.local'
 fqdn:                      'nfs.example.local'
 osfamily:                  'RedHat'
 operatingsystemmajrelease: '6'
+
+os:
+  family:  'RedHat'
+  release:
+    major: '6'
+networking:
+  domain:  'example.local'
+  fqdn:    'nfs.example.local'

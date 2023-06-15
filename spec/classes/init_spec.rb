@@ -93,8 +93,12 @@ describe 'nfs' do
     describe "on osfamily <#{v[:osfamily]}> when #{v[:release].nil? ? 'kernel' : 'operatingsystemmaj'}release is <#{v[:release]}#{v[:kernelrelease]}>" do
       let :facts do
         {
-          osfamily:                  v[:osfamily],
-          operatingsystemmajrelease: v[:release],
+          os: {
+            family:  v[:osfamily],
+            release: {
+              major: v[:release],
+            },
+          },
           kernelrelease:             v[:kernelrelease],
         }
       end
@@ -382,11 +386,15 @@ describe 'nfs' do
   end
 
   unsupported_platforms.sort.each do |_k, v|
-    describe "on unsupported osfamily <#{v[:osfamily]}> when #{v[:release].nil? ? 'kernel' : 'operatingsystemmaj'}release is <#{v[:release]}#{v[:kernelrelease]}>" do
+    describe "on unsupported [os][family] <#{v[:osfamily]}> when #{v[:release].nil? ? 'kernel' : '[os][release][major]'}release is <#{v[:release]}#{v[:kernelrelease]}>" do
       let :facts do
         {
-          osfamily:                  v[:osfamily],
-          operatingsystemmajrelease: v[:release],
+          os: {
+            family:  v[:osfamily],
+            release: {
+              major: v[:release],
+            },
+          },
           kernelrelease:             v[:kernelrelease],
         }
       end
