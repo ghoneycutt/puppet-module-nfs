@@ -1,4 +1,4 @@
-class { '::nfs':
+class { 'nfs':
   server => true,
 }
 

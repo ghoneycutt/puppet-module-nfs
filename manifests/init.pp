@@ -1,6 +1,39 @@
-# == Class: nfs
+# @summary Manages NFS
 #
-# Manages NFS
+# @param hiera_hash
+#   Boolean to use hiera_hash which merges all found instances of
+#   nfs::mounts in Hiera. This is useful for specifying mounts at different
+#   levels of the hierarchy and having them all included in the catalog.
+#
+# @param nfs_package
+#   Name of the NFS package. May be a string or an array.
+#
+# @param nfs_service
+#   Name of the NFS service.
+#
+# @param nfs_service_ensure
+#   Ensure attribute for the NFS service.
+#
+# @param nfs_service_enable
+#   Enable attribute for the NFS service.
+#
+# @param mounts
+#   Hash of mounts to be mounted on system.
+#
+# @param server
+#   Boolean to specify if the system is an NFS server.
+#
+# @param exports_path
+#   The location of the config file.
+#
+# @param exports_owner
+#   The owner of the config file.
+#
+# @param exports_group
+#   The group for the config file.
+#
+# @param exports_mode
+#   The mode for the config file.
 #
 class nfs (
   Boolean                $hiera_hash         = true,
@@ -15,28 +48,27 @@ class nfs (
   String                 $exports_group      = 'root',
   Pattern[/^[0-7]{4}$/]  $exports_mode       = '0644',
 ) {
-
-  case $::osfamily {
+  case $facts['os']['family'] {
     'RedHat': {
-      $default_nfs_package = [ 'nfs-utils' ]
+      $default_nfs_package = ['nfs-utils']
 
-      case $::operatingsystemmajrelease {
+      case $facts['os']['release']['major'] {
         '6': {
-          require ::rpcbind
-          include ::nfs::idmap
+          require rpcbind
+          include nfs::idmap
           $default_nfs_service = 'nfs'
           $default_nfs_service_ensure = 'stopped'
           $default_nfs_service_enable = false
         }
         /7|8/: {
-          require ::rpcbind
-          include ::nfs::idmap
+          require rpcbind
+          include nfs::idmap
           $default_nfs_service = undef
           $default_nfs_service_ensure = 'stopped'
           $default_nfs_service_enable = false
         }
         default: {
-          fail("nfs module only supports EL 6, 7 and 8 and operatingsystemmajrelease was detected as <${::operatingsystemmajrelease}>.")
+          fail("nfs module only supports EL 6, 7 and 8 and facts[os][release][major] was detected as <${facts['os']['release']['major']}>.")
         }
       }
     }
@@ -49,7 +81,7 @@ class nfs (
       $default_nfs_service_ensure = 'running'
       $default_nfs_service_enable = true
 
-      case $::kernelrelease {
+      case $facts['kernelrelease'] {
         '5.10': {
           $default_nfs_package = [
             'SUNWnfsckr',
@@ -67,7 +99,7 @@ class nfs (
           ]
         }
         default: {
-          fail("nfs module only supports Solaris 5.10 and 5.11 and kernelrelease was detected as <${::kernelrelease}>.")
+          fail("nfs module only supports Solaris 5.10 and 5.11 and facts[kernelrelease] was detected as <${facts['kernelrelease']}>.")
         }
       }
     }
@@ -76,24 +108,24 @@ class nfs (
         fail('This platform is not configured to be an NFS server.')
       }
 
-      include ::nfs::idmap
+      include nfs::idmap
       $default_idmap_service = 'rpcidmapd'
 
-      case $::operatingsystemmajrelease {
+      case $facts['os']['release']['major'] {
         '11','12': {
-          $default_nfs_package = [ 'nfs-client' ]
+          $default_nfs_package = ['nfs-client']
           $default_nfs_service = 'nfs'
           $default_nfs_service_ensure = 'running'
           $default_nfs_service_enable = true
         }
         default: {
-          fail("nfs module only supports Suse 11 and 12 and operatingsystemmajrelease was detected as <${::operatingsystemmajrelease}>.")
+          fail("nfs module only supports Suse 11 and 12 and facts[os][release][major was detected as <${facts['os']['release']['major']}>.")
         }
       }
     }
 
     default: {
-      fail("nfs module only supports osfamilies RedHat, Solaris and Suse, and <${::osfamily}> was detected.")
+      fail("nfs module only supports osfamilies RedHat, Solaris and Suse, and <${facts['os']['family']}> was detected.")
     }
   }
 
@@ -116,6 +148,7 @@ class nfs (
     if $nfs_service_ensure == 'USE_DEFAULTS' {
       $nfs_service_ensure_real = $default_nfs_service_ensure
     } else {
+      validate_re($nfs_service_ensure, '^(stopped)|(running)$', 'for nfs::nfs_service_ensure valid values are stopped, running')
       $nfs_service_ensure_real = $nfs_service_ensure
     }
 
@@ -131,7 +164,6 @@ class nfs (
   }
 
   if $server == true {
-
     file { 'nfs_exports':
       ensure => file,
       path   => $exports_path,

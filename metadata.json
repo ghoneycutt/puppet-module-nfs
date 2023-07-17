@@ -3,20 +3,31 @@
   "version": "2.3.0",
   "author": "ghoneycutt",
   "summary": "Manage NFS",
-  "description": "Manage NFS for client and server, including idmap",
   "license": "Apache-2.0",
   "source": "git://github.com/ghoneycutt/puppet-module-nfs.git",
   "project_page": "https://github.com/ghoneycutt/puppet-module-nfs",
   "issues_url": "https://github.com/ghoneycutt/puppet-module-nfs/issues",
-  "requirements": [
-    {"name":"puppet","version_requirement":">= 4.0.0 < 7.0.0"}
-  ],
   "dependencies": [
-    {"name":"ghoneycutt/common","version_requirement":">= 1.7.0 < 2.0.0"},
-    {"name":"puppetlabs/mount_core","version_requirement":">= 1.0.2 <2.0.0"},
-    {"name":"ghoneycutt/rpcbind","version_requirement":">= 1.7.0 < 2.0.0"},
-    {"name":"ghoneycutt/types","version_requirement":">= 1.12.0 < 2.0.0"},
-    {"name":"puppetlabs/stdlib","version_requirement":">= 4.16.0 < 6.0.0"}
+    {
+      "name": "ghoneycutt/common",
+      "version_requirement": ">= 1.7.0 < 2.0.0"
+    },
+    {
+      "name": "puppetlabs/mount_core",
+      "version_requirement": ">= 1.0.2 <2.0.0"
+    },
+    {
+      "name": "ghoneycutt/rpcbind",
+      "version_requirement": ">= 1.7.0 < 2.0.0"
+    },
+    {
+      "name": "ghoneycutt/types",
+      "version_requirement": ">= 1.12.0 < 2.0.0"
+    },
+    {
+      "name": "puppetlabs/stdlib",
+      "version_requirement": ">= 4.16.0 < 6.0.0"
+    }
   ],
   "operatingsystem_support": [
     {
@@ -72,5 +83,15 @@
         "12"
       ]
     }
-  ]
+  ],
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": ">= 6.0.0 < 9.0.0"
+    }
+  ],
+  "description": "Manage NFS for client and server, including idmap",
+  "pdk-version": "3.0.0",
+  "template-url": "pdk-default#3.0.0",
+  "template-ref": "tags/3.0.0-0-g056e50d"
 }

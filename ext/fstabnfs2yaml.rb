@@ -5,19 +5,21 @@
 # License: Apache Software License v2.0
 #
 puts 'nfs::mounts:'
-f = File.open('/etc/fstab','r')
+f = File.open('/etc/fstab', 'r')
 f.each do |line|
-  linearray = Array.new
-  if line[0] != '#'
-    line.split(/\s+/).each do |word|
-     linearray << word
-    end
-     device = linearray[0]
-     mount = linearray[1]
-     fstype = linearray[2]
-     options = linearray[3]
-     if fstype == 'nfs'
-       puts "  #{mount}:\n    ensure: present\n    device: #{device}\n    options: #{options}\n    fstype: nfs"
-     end
+  linearray = []
+  next if line[0] == '#'
+
+  line.split(%r{\s+}).each do |word|
+    linearray << word
   end
+
+  device = linearray[0]
+  mount = linearray[1]
+  fstype = linearray[2]
+  options = linearray[3]
+
+  next unless fstype == 'nfs'
+
+  puts "  #{mount}:\n    ensure: present\n    device: #{device}\n    options: #{options}\n    fstype: nfs"
 end
